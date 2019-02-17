@@ -1,5 +1,7 @@
 # Player Preferences Editor for Unity 3D
 
+[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/@dysman)
+
 Tool extension for the Unity Editor that enables easy access to the player preferences over a simple UI. Allows to view, add, remove and modify entries on the development machine.
 
 ![Preference editor window](https://www.bgranzow.de/downloads/PlayerPrefsEditor_light.png)
