@@ -255,6 +255,7 @@ namespace DevTools.PreferencesEditor
                 if (EditorUtility.DisplayDialog("Warning!", "Are you sure you want to delete ALL entries from " + tabState + "?\n\nUse with caution! Unity defined keys are affected too.", "Yes", "No"))
                 {
                     PlayerPrefs.DeleteAll();
+                    prepareData();
                 }
             }
             GUI.contentColor = defaultColor;
