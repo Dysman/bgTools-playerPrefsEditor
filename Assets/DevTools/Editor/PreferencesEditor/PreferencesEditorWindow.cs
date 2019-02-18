@@ -252,7 +252,7 @@ namespace DevTools.PreferencesEditor
             {
                 // ToDo: remove tabstate if clear that editorprefs not supoorted
                 var tabState = "PlayerPrefs";
-                if (EditorUtility.DisplayDialog("Warning!", "Are you sure you want to delete ALL entrys from " + tabState + "?\n\nUse with caution! Unity defined keys are affected too.", "Yes", "No"))
+                if (EditorUtility.DisplayDialog("Warning!", "Are you sure you want to delete ALL entries from " + tabState + "?\n\nUse with caution! Unity defined keys are affected too.", "Yes", "No"))
                 {
                     PlayerPrefs.DeleteAll();
                 }
@@ -295,11 +295,11 @@ namespace DevTools.PreferencesEditor
 
             loadKeys(out userDef, out unityDef);
 
-            CreatePrefEntrys(userDef, prefEntryHolder.userDefList);
-            CreatePrefEntrys(unityDef, prefEntryHolder.unityDefList);
+            CreatePrefEntries(userDef, prefEntryHolder.userDefList);
+            CreatePrefEntries(unityDef, prefEntryHolder.unityDefList);
         }
 
-        private void CreatePrefEntrys(string[] keySource, List<PreferenceEntry> listDest)
+        private void CreatePrefEntries(string[] keySource, List<PreferenceEntry> listDest)
         {
             foreach (string key in keySource)
             {
