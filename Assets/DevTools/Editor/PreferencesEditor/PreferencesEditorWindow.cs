@@ -32,6 +32,7 @@ namespace DevTools.PreferencesEditor
         //}
 
         private static string pathToPrefs = String.Empty;
+        private static string platformPathPrefix = String.Empty;
 
         private string[] userDef;
         private string[] unityDef;
@@ -63,10 +64,13 @@ namespace DevTools.PreferencesEditor
         {
 #if UNITY_EDITOR_WIN
             pathToPrefs = @"SOFTWARE\Unity\UnityEditor\" + PlayerSettings.companyName + @"\" + PlayerSettings.productName;
+            platformPathPrefix = @"<CurrendUser>";
 #elif UNITY_EDITOR_OSX
             pathToPrefs = @"Library/Preferences/unity." + PlayerSettings.companyName + "." + PlayerSettings.productName + ".plist";
+            platformPathPrefix = @"";
 #elif UNITY_EDITOR_LINUX
-            pathToPrefs = @"/.config/unity3d/" + PlayerSettings.companyName + "/" + PlayerSettings.productName;
+            pathToPrefs = @".config/unity3d/" + PlayerSettings.companyName + "/" + PlayerSettings.productName;
+            platformPathPrefix = @"~";
 #endif
 
             // Fix for serialisation issue of static fields
@@ -241,7 +245,7 @@ namespace DevTools.PreferencesEditor
             GUILayout.Box(ImageManager.GetOsIcon(), Styles.icon);
             GUI.contentColor = defaultColor;
 
-            GUILayout.TextField(@"<CurrendUser>" + Path.DirectorySeparatorChar + pathToPrefs, GUILayout.MinWidth(200)); 
+            GUILayout.TextField(platformPathPrefix + Path.DirectorySeparatorChar + pathToPrefs, GUILayout.MinWidth(200)); 
 
             GUI.contentColor = (EditorGUIUtility.isProSkin) ? Styles.Colors.LightGray : Styles.Colors.DarkGray;
             if (GUILayout.Button(new GUIContent(ImageManager.Refresh, "Refresh"), Styles.miniButton))
