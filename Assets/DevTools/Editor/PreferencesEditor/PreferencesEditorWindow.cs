@@ -52,9 +52,6 @@ namespace DevTools.PreferencesEditor
             PreferencesEditorWindow window = EditorWindow.GetWindow<PreferencesEditorWindow>(false, "Prefs Editor");
             window.minSize = new Vector2(400.0f, 300.0f);
 
-            window.InitReorderedList();
-            window.prepareData();
-
             //window.titleContent = EditorGUIUtility.IconContent("SettingsIcon"); // Icon
 
             window.Show();
@@ -75,10 +72,13 @@ namespace DevTools.PreferencesEditor
 
             // Fix for serialisation issue of static fields
             if (userDefList == null)
+            {
                 InitReorderedList();
+                PrepareData();
+            }
         }
 
-        void InitReorderedList()
+        private void InitReorderedList()
         {
             if (prefEntryHolder == null)
             {
@@ -101,7 +101,6 @@ namespace DevTools.PreferencesEditor
             userDefList = new ReorderableList(serializedObject, serializedObject.FindProperty("userDefList"), false, true, true, true);
             unityDefList = new ReorderableList(serializedObject, serializedObject.FindProperty("unityDefList"), false, true, false, false);
 
-            userDefList.onAddCallback = (ReorderableList l) => { Debug.Log("ADD"); };
             userDefList.drawHeaderCallback = (Rect rect) =>
             {
                 EditorGUI.LabelField(rect, "User defined");
@@ -190,7 +189,7 @@ namespace DevTools.PreferencesEditor
                             }
                             PlayerPrefs.Save();
 
-                            prepareData();
+                            PrepareData();
 
                             Focus();
                         }, this);
@@ -250,7 +249,7 @@ namespace DevTools.PreferencesEditor
             GUI.contentColor = (EditorGUIUtility.isProSkin) ? Styles.Colors.LightGray : Styles.Colors.DarkGray;
             if (GUILayout.Button(new GUIContent(ImageManager.Refresh, "Refresh"), Styles.miniButton))
             {
-                prepareData();
+                PrepareData();
             }
             if (GUILayout.Button(new GUIContent(ImageManager.Trash, "Delete all"), Styles.miniButton))
             {
@@ -259,7 +258,7 @@ namespace DevTools.PreferencesEditor
                 if (EditorUtility.DisplayDialog("Warning!", "Are you sure you want to delete ALL entries from " + tabState + "?\n\nUse with caution! Unity defined keys are affected too.", "Yes", "No"))
                 {
                     PlayerPrefs.DeleteAll();
-                    prepareData();
+                    PrepareData();
                 }
             }
             GUI.contentColor = defaultColor;
@@ -294,7 +293,7 @@ namespace DevTools.PreferencesEditor
             GUILayout.EndVertical();
         }
 
-        private void prepareData()
+        private void PrepareData()
         {
             prefEntryHolder.ClearLists();
 
