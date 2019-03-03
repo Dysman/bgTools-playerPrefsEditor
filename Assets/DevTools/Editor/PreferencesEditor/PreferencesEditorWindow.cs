@@ -11,6 +11,9 @@ using Microsoft.Win32;
 using System.Xml.Linq;
 using System.Xml;
 using UnityEditor.iOS.Xcode;
+#elif UNITY_EDITOR_LINUX
+using System.Xml.Linq;
+using System.Xml;
 #endif
 using DevTools.Utils;
 using DevTools.Dialogs;
@@ -64,12 +67,11 @@ namespace DevTools.PreferencesEditor
             platformPathPrefix = @"<CurrendUser>";
 #elif UNITY_EDITOR_OSX
             pathToPrefs = @"Library/Preferences/unity." + PlayerSettings.companyName + "." + PlayerSettings.productName + ".plist";
-            platformPathPrefix = @"";
+            platformPathPrefix = @"~";
 #elif UNITY_EDITOR_LINUX
-            pathToPrefs = @".config/unity3d/" + PlayerSettings.companyName + "/" + PlayerSettings.productName;
+            pathToPrefs = @".config/unity3d/" + PlayerSettings.companyName + "/" + PlayerSettings.productName + "/prefs";
             platformPathPrefix = @"~";
 #endif
-
             // Fix for serialisation issue of static fields
             if (userDefList == null)
             {
@@ -362,7 +364,8 @@ namespace DevTools.PreferencesEditor
             string tmpPath = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "tmpDevToolsPlayerPrefsEncodet.plist");
 
 
-            if(File.Exists(homePath)){
+            if(File.Exists(homePath))
+            {
 	            var cmdStr = string.Format(@"-c ""plutil -convert xml1 {0} && cat {0} | perl -nle 'print $& if m{1}' && plutil -convert binary1 {0}""", homePath, "{(?<=<key>)(.*?)(?=</key>)}");
 
                 var process = new System.Diagnostics.Process();
@@ -401,9 +404,21 @@ namespace DevTools.PreferencesEditor
                 process = System.Diagnostics.Process.Start("rm", tmpPath);
                 process.WaitForExit();
 */          }
-#endif
+#elif UNITY_EDITOR_LINUX
+            string homePath = Path.Combine(Environment.GetEnvironmentVariable("HOME"), pathToPrefs);
 
-            // ToDo: implement and Linux
+            if(File.Exists(homePath))
+            {
+                XmlReaderSettings settings = new XmlReaderSettings();
+                //settings.ProhibitDtd = false;
+                XmlReader reader = XmlReader.Create(homePath, settings);
+
+                XDocument doc = XDocument.Load(reader);
+
+                keys = doc.Element("unity_prefs").Elements().Select( (e) => e.Attribute("name").Value ).ToArray();
+            }
+#endif
+            //keys.ToList().ForEach( e => { Debug.Log(e); } );
 
             // Seperate keys int unity defined and user defined
             var groups = keys.GroupBy((key) => key.StartsWith("unity.") || key.StartsWith("UnityGraphicsQuality"))
