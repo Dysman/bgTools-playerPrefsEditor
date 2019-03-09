@@ -46,6 +46,12 @@ namespace DevTools.PreferencesEditor
 
         Vector2 scrollPos;
 
+        private List<TextValidator> prefKeyValidatorList = new List<TextValidator>()
+        {
+            new TextValidator(TextValidator.ErrorType.Error, @"Invalid character detected. Only letters, numbers, space and _!§$%&/()=?*+~#-]+$ are allowed", @"(^$)|(^[a-zA-Z0-9 _!§$%&/()=?*+~#-]+$)"),
+            new TextValidator(TextValidator.ErrorType.Warning, @"The given key already exist. The existing entry would be overridden!", (key) => { return !PlayerPrefs.HasKey(key); })
+        };
+
         [MenuItem("Tools/DevTools/Preferences Editor", false, 1)]
         static void ShowWindow()
         {
@@ -171,7 +177,7 @@ namespace DevTools.PreferencesEditor
                 {
                     menu.AddItem(new GUIContent(type.ToString()), false, () =>
                     {
-                        TextFieldDialog.OpenDialog("Create new property", "Key for the new property:", (key) => {
+                        TextFieldDialog.OpenDialog("Create new property", "Key for the new property:", prefKeyValidatorList, (key) => {
                             switch (type)
                             {
                                 case PreferenceEntry.PrefTypes.Float:

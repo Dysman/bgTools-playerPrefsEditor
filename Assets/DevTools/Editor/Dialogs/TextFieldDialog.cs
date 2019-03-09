@@ -1,6 +1,7 @@
 ﻿using DevTools.Extensions;
 using DevTools.Utils;
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,13 +21,20 @@ namespace DevTools.Dialogs
         [NonSerialized]
         private string description;
 
-        public static void OpenDialog(string title, string description, Action<string> callback, EditorWindow targetWin = null)
+        [NonSerialized]
+        private List<TextValidator> validatorList = new List<TextValidator>();
+
+        [NonSerialized]
+        private TextValidator errorValidator = null;
+
+        public static void OpenDialog(string title, string description, List<TextValidator> validatorList, Action<string> callback, EditorWindow targetWin = null)
         {
             TextFieldDialog window = ScriptableObject.CreateInstance<TextFieldDialog>();
 
             window.headerTitle = title;
             window.description = description;
             window.callback = callback;
+            window.validatorList = validatorList;
             window.position = new Rect(0, 0, 350, 140);
 
             window.CenterOnWindow(targetWin);
@@ -38,6 +46,10 @@ namespace DevTools.Dialogs
 
         void OnGUI()
         {
+            errorValidator = null;
+
+            Color defaultColor = GUI.contentColor;
+
             EditorGUILayout.LabelField(headerTitle, GUI.skin.GetStyle("Label"), GUILayout.ExpandWidth(true));
             Styles.HorizontalSeparator();
             GUILayout.Space(10);
@@ -49,17 +61,53 @@ namespace DevTools.Dialogs
             resultString = EditorGUILayout.TextField(resultString, GUILayout.ExpandWidth(true));
             GUILayout.Space(20);
 
+            foreach(TextValidator val in validatorList)
+            {
+                if (!val.Validate(resultString))
+                {
+                    errorValidator = val;
+                    break;
+                }
+            }
+            bool lockOkButton = !(errorValidator != null && errorValidator.m_errorType == TextValidator.ErrorType.Error);
+
             GUILayout.BeginHorizontal();
+
+            if(errorValidator != null)
+            {
+                switch (errorValidator.m_errorType)
+                {
+                    case TextValidator.ErrorType.Info:
+                        GUI.contentColor = Styles.Colors.Blue;
+                        GUILayout.Box(new GUIContent(ImageManager.Info, errorValidator.m_failureMsg), Styles.icon);
+                        break;
+                    case TextValidator.ErrorType.Warning:
+                        GUI.contentColor = Styles.Colors.Yellow;
+                        GUILayout.Box(new GUIContent(ImageManager.Exclamation, errorValidator.m_failureMsg), Styles.icon);
+                        break;
+                    case TextValidator.ErrorType.Error:
+                        GUI.contentColor = Styles.Colors.Red;
+                        GUILayout.Box(new GUIContent(ImageManager.Exclamation, errorValidator.m_failureMsg), Styles.icon);
+                        break;
+                }
+                GUI.contentColor = defaultColor;
+            }
+
             GUILayout.FlexibleSpace();
 
             if (GUILayout.Button("Cancel", GUILayout.Width(75.0f)))
                 this.Close();
+
+            GUI.enabled = lockOkButton;
 
             if (GUILayout.Button("OK", GUILayout.Width(75.0f)))
             {
                 callback(resultString);
                 Close();
             }
+
+            GUI.enabled = true;
+
             GUILayout.EndHorizontal();
 
             EditorGUI.FocusTextInControl("textField");
@@ -69,8 +117,11 @@ namespace DevTools.Dialogs
                 switch (Event.current.keyCode)
                 {
                     case KeyCode.Return:
-                        callback(resultString);
-                        Close();
+                        if (lockOkButton)
+                        {
+                            callback(resultString);
+                            Close();
+                        }
                         break;
                     case KeyCode.Escape:
                         Close();
