@@ -87,6 +87,32 @@ namespace DevTools.Utils
                 return trash;
             }
         }
+
+        private static Texture2D exclamation;
+        public static Texture2D Exclamation
+        {
+            get
+            {
+                if(exclamation == null)
+                {
+                    exclamation = (Texture2D)AssetDatabase.LoadAssetAtPath(GetAssetDir() + "exclamation.png", typeof(Texture2D));
+                }
+                return exclamation;
+            }
+        }
+
+        private static Texture2D info;
+        public static Texture2D Info
+        {
+            get
+            {
+                if (info == null)
+                {
+                    info = (Texture2D)AssetDatabase.LoadAssetAtPath(GetAssetDir() + "info.png", typeof(Texture2D));
+                }
+                return info;
+            }
+        }
     }
 }
 #endif
