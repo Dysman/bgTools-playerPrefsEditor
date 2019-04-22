@@ -35,7 +35,7 @@ namespace DevTools.PreferencesEditor
         //}
 
         private static string pathToPrefs = String.Empty;
-        private static string platformPathPrefix = String.Empty;
+        private static string platformPathPrefix = @"~";
 
         private string[] userDef;
         private string[] unityDef;
@@ -47,7 +47,7 @@ namespace DevTools.PreferencesEditor
 
         private PreferenceEntryHolder prefEntryHolder;
 
-        Vector2 scrollPos;
+        private Vector2 scrollPos;
 
         private List<TextValidator> prefKeyValidatorList = new List<TextValidator>()
         {
@@ -60,6 +60,7 @@ namespace DevTools.PreferencesEditor
         {
             PreferencesEditorWindow window = EditorWindow.GetWindow<PreferencesEditorWindow>(false, "Prefs Editor");
             window.minSize = new Vector2(400.0f, 300.0f);
+            window.name = "Prefs Editor";
 
             //window.titleContent = EditorGUIUtility.IconContent("SettingsIcon"); // Icon
 
@@ -73,10 +74,8 @@ namespace DevTools.PreferencesEditor
             platformPathPrefix = @"<CurrendUser>";
 #elif UNITY_EDITOR_OSX
             pathToPrefs = @"Library/Preferences/unity." + PlayerSettings.companyName + "." + PlayerSettings.productName + ".plist";
-            platformPathPrefix = @"~";
 #elif UNITY_EDITOR_LINUX
             pathToPrefs = @".config/unity3d/" + PlayerSettings.companyName + "/" + PlayerSettings.productName + "/prefs";
-            platformPathPrefix = @"~";
 #endif
             // Fix for serialisation issue of static fields
             if (userDefList == null)
@@ -160,15 +159,19 @@ namespace DevTools.PreferencesEditor
             };
             userDefList.onRemoveCallback = (ReorderableList l) =>
             {
-                // ToDo: remove tabstate if clear that editorprefs not supoorted
+                // ToDo: remove tabstate if clear that editorprefs not supported
                 var tabState = "PlayerPrefs";
+
+                userDefList.ReleaseKeyboardFocus();
+                unityDefList.ReleaseKeyboardFocus();
+
                 if (EditorUtility.DisplayDialog("Warning!", "Are you sure you want to delete this entry from " + tabState + "?", "Yes", "No"))
                 {
                     PlayerPrefs.DeleteKey(l.serializedProperty.GetArrayElementAtIndex(l.index).FindPropertyRelative("m_key").stringValue);
                     PlayerPrefs.Save();
 
                     ReorderableList.defaultBehaviours.DoRemoveButton(l);
-                    //reload();
+                    //PrepareData();
                 }
             };
 
@@ -243,62 +246,68 @@ namespace DevTools.PreferencesEditor
 
         void OnGUI()
         {
-            Color defaultColor = GUI.contentColor;
-
-            GUILayout.BeginVertical();
-            GUILayout.BeginHorizontal();
-
-            GUI.contentColor = (EditorGUIUtility.isProSkin) ? Styles.Colors.LightGray : Styles.Colors.DarkGray;
-            GUILayout.Box(ImageManager.GetOsIcon(), Styles.icon);
-            GUI.contentColor = defaultColor;
-
-            GUILayout.TextField(platformPathPrefix + Path.DirectorySeparatorChar + pathToPrefs, GUILayout.MinWidth(200)); 
-
-            GUI.contentColor = (EditorGUIUtility.isProSkin) ? Styles.Colors.LightGray : Styles.Colors.DarkGray;
-            if (GUILayout.Button(new GUIContent(ImageManager.Refresh, "Refresh"), Styles.miniButton))
+            // Need to catch 'Stack empty' error on linux
+            try
             {
-                PrepareData();
-            }
-            if (GUILayout.Button(new GUIContent(ImageManager.Trash, "Delete all"), Styles.miniButton))
-            {
-                // ToDo: remove tabstate if clear that editorprefs not supoorted
-                var tabState = "PlayerPrefs";
-                if (EditorUtility.DisplayDialog("Warning!", "Are you sure you want to delete ALL entries from " + tabState + "?\n\nUse with caution! Unity defined keys are affected too.", "Yes", "No"))
+                Color defaultColor = GUI.contentColor;
+
+                GUILayout.BeginVertical();
+                GUILayout.BeginHorizontal();
+
+                GUI.contentColor = (EditorGUIUtility.isProSkin) ? Styles.Colors.LightGray : Styles.Colors.DarkGray;
+                GUILayout.Box(ImageManager.GetOsIcon(), Styles.icon);
+                GUI.contentColor = defaultColor;
+
+                GUILayout.TextField(platformPathPrefix + Path.DirectorySeparatorChar + pathToPrefs, GUILayout.MinWidth(200)); 
+
+                GUI.contentColor = (EditorGUIUtility.isProSkin) ? Styles.Colors.LightGray : Styles.Colors.DarkGray;
+                if (GUILayout.Button(new GUIContent(ImageManager.Refresh, "Refresh"), Styles.miniButton))
                 {
-                    PlayerPrefs.DeleteAll();
                     PrepareData();
                 }
+                if (GUILayout.Button(new GUIContent(ImageManager.Trash, "Delete all"), Styles.miniButton))
+                {
+                    // ToDo: remove tabstate if clear that editorprefs not supported
+                    var tabState = "PlayerPrefs";
+                    if (EditorUtility.DisplayDialog("Warning!", "Are you sure you want to delete ALL entries from " + tabState + "?\n\nUse with caution! Unity defined keys are affected too.", "Yes", "No"))
+                    {
+                        PlayerPrefs.DeleteAll();
+                        PrepareData();
+                    }
+                }
+                GUI.contentColor = defaultColor;
+
+                GUILayout.EndHorizontal();
+
+                //GUILayout.BeginHorizontal();
+
+                //if (GUILayout.Toggle(tabState == TabState.PlayerPrefs, "PlayerPrefs", EditorStyles.toolbarButton))
+                //    tabState = TabState.PlayerPrefs;
+
+                //GUI.enabled = false;
+                //if (GUILayout.Toggle(tabState == TabState.EditorPrefs, "EditorPrefs", EditorStyles.toolbarButton))
+                //    tabState = TabState.EditorPrefs;
+                //GUI.enabled = true;
+
+                //GUILayout.EndHorizontal();
+
+                scrollPos = GUILayout.BeginScrollView(scrollPos);
+                serializedObject.Update();
+                userDefList.DoLayoutList();
+                serializedObject.ApplyModifiedProperties();
+
+                GUILayout.FlexibleSpace();
+
+                showSystemGroup = EditorGUILayout.Foldout(showSystemGroup, new GUIContent("Show System"));
+                if (showSystemGroup)
+                {
+                    unityDefList.DoLayoutList();
+                }
+                GUILayout.EndScrollView();
+                GUILayout.EndVertical();
             }
-            GUI.contentColor = defaultColor;
-
-            GUILayout.EndHorizontal();
-
-            //GUILayout.BeginHorizontal();
-
-            //if (GUILayout.Toggle(tabState == TabState.PlayerPrefs, "PlayerPrefs", EditorStyles.toolbarButton))
-            //    tabState = TabState.PlayerPrefs;
-
-            //GUI.enabled = false;
-            //if (GUILayout.Toggle(tabState == TabState.EditorPrefs, "EditorPrefs", EditorStyles.toolbarButton))
-            //    tabState = TabState.EditorPrefs;
-            //GUI.enabled = true;
-
-            //GUILayout.EndHorizontal();
-
-            scrollPos = GUILayout.BeginScrollView(scrollPos);
-            serializedObject.Update();
-            userDefList.DoLayoutList(); 
-            serializedObject.ApplyModifiedProperties();
-
-            GUILayout.FlexibleSpace();
-
-            showSystemGroup = EditorGUILayout.Foldout(showSystemGroup, new GUIContent("Show System"));
-            if (showSystemGroup)
-            {
-                unityDefList.DoLayoutList();
-            }
-            GUILayout.EndScrollView();
-            GUILayout.EndVertical();
+            catch (InvalidOperationException)
+            { }
         }
 
         private void PrepareData()

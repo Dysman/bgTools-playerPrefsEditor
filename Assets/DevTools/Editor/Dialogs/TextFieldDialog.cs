@@ -16,9 +16,6 @@ namespace DevTools.Dialogs
         private Action<string> callback;
 
         [NonSerialized]
-        private string headerTitle;
-
-        [NonSerialized]
         private string description;
 
         [NonSerialized]
@@ -31,15 +28,16 @@ namespace DevTools.Dialogs
         {
             TextFieldDialog window = ScriptableObject.CreateInstance<TextFieldDialog>();
 
-            window.headerTitle = title;
+            window.name = "TextFieldDialog '" + title + "'";
+            window.titleContent =  new GUIContent (title);
             window.description = description;
             window.callback = callback;
             window.validatorList = validatorList;
             window.position = new Rect(0, 0, 350, 140);
 
-            window.CenterOnWindow(targetWin);
+            window.ShowUtility();
 
-            window.ShowPopup();
+            window.CenterOnWindow(targetWin);
             window.Focus();
             EditorWindow.FocusWindowIfItsOpen<TextFieldDialog>();
         }
@@ -50,16 +48,15 @@ namespace DevTools.Dialogs
 
             Color defaultColor = GUI.contentColor;
 
-            EditorGUILayout.LabelField(headerTitle, GUI.skin.GetStyle("Label"), GUILayout.ExpandWidth(true));
-            Styles.HorizontalSeparator();
-            GUILayout.Space(10);
-
+            GUILayout.Space(20);
             EditorGUILayout.LabelField(description);
             GUILayout.Space(20);
 
-            GUI.SetNextControlName("textField");
+            GUI.SetNextControlName(name+"_textInput");
             resultString = EditorGUILayout.TextField(resultString, GUILayout.ExpandWidth(true));
-            GUILayout.Space(20);
+//            GUILayout.Space(20);
+            GUILayout.FlexibleSpace();
+
 
             foreach(TextValidator val in validatorList)
             {
@@ -110,7 +107,15 @@ namespace DevTools.Dialogs
 
             GUILayout.EndHorizontal();
 
-            EditorGUI.FocusTextInControl("textField");
+            GUILayout.Space(20);
+
+            // set focus only if element exist
+            try
+            { 
+                EditorGUI.FocusTextInControl(name+"_textInput");
+            }
+            catch (MissingReferenceException)
+            { } 
 
             if (Event.current != null && Event.current.isKey)
             {
