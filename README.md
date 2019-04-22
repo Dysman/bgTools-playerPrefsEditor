@@ -10,7 +10,7 @@ Tool extension for the Unity Editor that enables easy access to the player prefe
 
 Unity Version: 5.5.0 or higher
 
-Editor Version: Windows, MacOS
+Editor Version: Windows, MacOS, Linux
 
 ## Installation
 
