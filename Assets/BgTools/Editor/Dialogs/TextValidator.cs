@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace DevTools.Dialogs
+namespace BgTools.Dialogs
 {
     public class TextValidator
     {

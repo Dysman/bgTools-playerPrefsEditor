@@ -1,11 +1,11 @@
-﻿using DevTools.Extensions;
-using DevTools.Utils;
+﻿using BgTools.Extensions;
+using BgTools.Utils;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace DevTools.Dialogs
+namespace BgTools.Dialogs
 {
     public class TextFieldDialog : EditorWindow
     {

@@ -15,10 +15,10 @@ using UnityEditor.iOS.Xcode;
 using System.Xml.Linq;
 using System.Xml;
 #endif
-using DevTools.Utils;
-using DevTools.Dialogs;
+using BgTools.Utils;
+using BgTools.Dialogs;
 
-namespace DevTools.PreferencesEditor
+namespace BgTools.PlayerPreferencesEditor
 {
     public class PreferencesEditorWindow : EditorWindow
     {
@@ -55,7 +55,7 @@ namespace DevTools.PreferencesEditor
             new TextValidator(TextValidator.ErrorType.Warning, @"The given key already exist. The existing entry would be overridden!", (key) => { return !PlayerPrefs.HasKey(key); })
         };
 
-        [MenuItem("Tools/DevTools/Preferences Editor", false, 1)]
+        [MenuItem("Tools/BG Tools/Player Preferences Editor", false, 1)]
         static void ShowWindow()
         {
             PreferencesEditorWindow window = EditorWindow.GetWindow<PreferencesEditorWindow>(false, "Prefs Editor");
@@ -263,6 +263,7 @@ namespace DevTools.PreferencesEditor
                 GUI.contentColor = (EditorGUIUtility.isProSkin) ? Styles.Colors.LightGray : Styles.Colors.DarkGray;
                 if (GUILayout.Button(new GUIContent(ImageManager.Refresh, "Refresh"), Styles.miniButton))
                 {
+                    PlayerPrefs.Save();
                     PrepareData();
                 }
                 if (GUILayout.Button(new GUIContent(ImageManager.Trash, "Delete all"), Styles.miniButton))
@@ -376,7 +377,7 @@ namespace DevTools.PreferencesEditor
 
 #elif UNITY_EDITOR_OSX
             string homePath = Path.Combine(Environment.GetEnvironmentVariable("HOME"), pathToPrefs);
-            string tmpPath = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "tmpDevToolsPlayerPrefsEncodet.plist");
+            string tmpPath = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "tmpBGToolsPlayerPrefsEncodet.plist");
 
 
             if(File.Exists(homePath))
@@ -433,7 +434,7 @@ namespace DevTools.PreferencesEditor
                 keys = doc.Element("unity_prefs").Elements().Select( (e) => e.Attribute("name").Value ).ToArray();
             }
 #endif
-            //keys.ToList().ForEach( e => { Debug.Log(e); } );
+            // keys.ToList().ForEach( e => { Debug.Log(e); } );
 
             // Seperate keys int unity defined and user defined
             var groups = keys.GroupBy((key) => key.StartsWith("unity.") || key.StartsWith("UnityGraphicsQuality"))

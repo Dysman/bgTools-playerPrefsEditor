@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace DevTools.Utils
+namespace BgTools.Utils
 {
     public class ImageManager
     {

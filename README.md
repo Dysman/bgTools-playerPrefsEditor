@@ -14,8 +14,8 @@ Editor Version: Windows, MacOS, Linux
 
 ## Installation
 
-Place the DevTools folder somewhere in your project. It's not relevant where it's located, the plugin will find all of its files by itself.
+Place the BgTools folder somewhere in your project. It's not relevant where it's located, the plugin will find all of its files by itself.
 
 ## Usage
 
-The entry to open the _Player Preferences Editor_ is located in the menubar at Tools/DevTools/Preferences Editor. It's a standard dockable window, so place it wherever it helps to be productive.
+The entry to open the _Player Preferences Editor_ is located in the menubar at Tools/BG Tools/Player Preferences Editor. It's a standard dockable window, so place it wherever it helps to be productive.
