@@ -17,6 +17,7 @@ using System.Xml;
 #endif
 using BgTools.Utils;
 using BgTools.Dialogs;
+using UnityEditor.IMGUI.Controls;
 
 namespace BgTools.PlayerPreferencesEditor
 {
@@ -24,7 +25,7 @@ namespace BgTools.PlayerPreferencesEditor
     {
         #region ErrorValues
         private int ERROR_VALUE_INT = int.MinValue;
-        private string ERROR_VALUE_STR = "<devTool_error_24072017>";
+        private string ERROR_VALUE_STR = "<bgTool_error_24072017>";
         #endregion //ErrorValues
 
         //private TabState tabState = TabState.PlayerPrefs;
@@ -48,6 +49,9 @@ namespace BgTools.PlayerPreferencesEditor
         private PreferenceEntryHolder prefEntryHolder;
 
         private Vector2 scrollPos;
+
+        private SearchField searchfield;
+        private string searchTxt;
 
         private List<TextValidator> prefKeyValidatorList = new List<TextValidator>()
         {
@@ -77,6 +81,8 @@ namespace BgTools.PlayerPreferencesEditor
 #elif UNITY_EDITOR_LINUX
             pathToPrefs = @".config/unity3d/" + PlayerSettings.companyName + "/" + PlayerSettings.productName + "/prefs";
 #endif
+            searchfield = new SearchField();
+
             // Fix for serialisation issue of static fields
             if (userDefList == null)
             {
@@ -258,7 +264,7 @@ namespace BgTools.PlayerPreferencesEditor
                 GUILayout.Box(ImageManager.GetOsIcon(), Styles.icon);
                 GUI.contentColor = defaultColor;
 
-                GUILayout.TextField(platformPathPrefix + Path.DirectorySeparatorChar + pathToPrefs, GUILayout.MinWidth(200)); 
+                GUILayout.TextField(platformPathPrefix + Path.DirectorySeparatorChar + pathToPrefs, GUILayout.MinWidth(200));
 
                 GUI.contentColor = (EditorGUIUtility.isProSkin) ? Styles.Colors.LightGray : Styles.Colors.DarkGray;
                 if (GUILayout.Button(new GUIContent(ImageManager.Refresh, "Refresh"), Styles.miniButton))
@@ -279,6 +285,15 @@ namespace BgTools.PlayerPreferencesEditor
                 GUI.contentColor = defaultColor;
 
                 GUILayout.EndHorizontal();
+
+                EditorGUI.BeginChangeCheck();
+                searchTxt = searchfield.OnGUI(searchTxt);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    PrepareData();
+                }
+
+                GUILayout.Space(3);
 
                 //GUILayout.BeginHorizontal();
 
@@ -323,6 +338,11 @@ namespace BgTools.PlayerPreferencesEditor
 
         private void CreatePrefEntries(string[] keySource, List<PreferenceEntry> listDest)
         {
+            if (!string.IsNullOrEmpty(searchTxt))
+            {
+                keySource = keySource.Where((a) => a.ToLower().Contains(searchTxt.ToLower())).ToArray();
+            }
+
             foreach (string key in keySource)
             {
                 var entry = new PreferenceEntry();
@@ -391,11 +411,11 @@ namespace BgTools.PlayerPreferencesEditor
                 process.StartInfo.FileName = "sh";
                 process.StartInfo.Arguments = cmdStr;
                 process.Start();
-    
+
                 process.WaitForExit();
-    
+
                 keys = process.StandardOutput.ReadToEnd().Split('\n').ToArray();
-    
+
                 // var process = System.Diagnostics.Process.Start("plutil", "-convert xml1 " + homePath + " -o " + tmpPath);
                 // process.WaitForExit();
 
@@ -409,7 +429,7 @@ namespace BgTools.PlayerPreferencesEditor
             /*     XmlReaderSettings settings = new XmlReaderSettings();
                 settings.ProhibitDtd = false;
                 XmlReader reader = XmlReader.Create(tmpPath, settings);
-    
+
                 XDocument doc = XDocument.Load(reader);
                 XElement plist = doc.Element("plist");
                 XElement dict = plist.Element("dict");
