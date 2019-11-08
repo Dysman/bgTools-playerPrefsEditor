@@ -1,31 +1,21 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 using UnityEditorInternal;
 using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
-#if UNITY_EDITOR_WIN
-using Microsoft.Win32;
-#elif UNITY_EDITOR_OSX
-using System.Xml.Linq;
-using System.Xml;
-using UnityEditor.iOS.Xcode;
-#elif UNITY_EDITOR_LINUX
-using System.Xml.Linq;
-using System.Xml;
-#endif
 using BgTools.Utils;
 using BgTools.Dialogs;
-using UnityEditor.IMGUI.Controls;
 
 namespace BgTools.PlayerPreferencesEditor
 {
     public class PreferencesEditorWindow : EditorWindow
     {
         #region ErrorValues
-        private int ERROR_VALUE_INT = int.MinValue;
-        private string ERROR_VALUE_STR = "<bgTool_error_24072017>";
+        private readonly int ERROR_VALUE_INT = int.MinValue;
+        private readonly string ERROR_VALUE_STR = "<bgTool_error_24072017>";
         #endregion //ErrorValues
 
         //private TabState tabState = TabState.PlayerPrefs;
@@ -49,6 +39,8 @@ namespace BgTools.PlayerPreferencesEditor
         private PreferenceEntryHolder prefEntryHolder;
 
         private Vector2 scrollPos;
+
+        private PreferanceStorageAccessor entryIndexer;
 
         private SearchField searchfield;
         private string searchTxt;
@@ -76,10 +68,13 @@ namespace BgTools.PlayerPreferencesEditor
 #if UNITY_EDITOR_WIN
             pathToPrefs = @"SOFTWARE\Unity\UnityEditor\" + PlayerSettings.companyName + @"\" + PlayerSettings.productName;
             platformPathPrefix = @"<CurrendUser>";
+            entryIndexer = new WindowsPrefStorage(pathToPrefs);
 #elif UNITY_EDITOR_OSX
             pathToPrefs = @"Library/Preferences/unity." + PlayerSettings.companyName + "." + PlayerSettings.productName + ".plist";
+            entryIndexer = new MacEntryIndexer(pathToPrefs);
 #elif UNITY_EDITOR_LINUX
             pathToPrefs = @".config/unity3d/" + PlayerSettings.companyName + "/" + PlayerSettings.productName + "/prefs";
+            entryIndexer = new LinuxEntryIndexer(pathToPrefs);
 #endif
             searchfield = new SearchField();
 
@@ -290,7 +285,7 @@ namespace BgTools.PlayerPreferencesEditor
                 searchTxt = searchfield.OnGUI(searchTxt);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    PrepareData();
+                    PrepareData(false);
                 }
 
                 GUILayout.Space(3);
@@ -326,11 +321,11 @@ namespace BgTools.PlayerPreferencesEditor
             { }
         }
 
-        private void PrepareData()
+        private void PrepareData(bool reloadKeys = true)
         {
             prefEntryHolder.ClearLists();
 
-            loadKeys(out userDef, out unityDef);
+            LoadKeys(out userDef, out unityDef, reloadKeys);
 
             CreatePrefEntries(userDef, prefEntryHolder.userDefList);
             CreatePrefEntries(unityDef, prefEntryHolder.unityDefList);
@@ -378,87 +373,16 @@ namespace BgTools.PlayerPreferencesEditor
             }
         }
 
-        private void loadKeys(out string[] userDef, out string[] unityDef)
+        private void LoadKeys(out string[] userDef, out string[] unityDef, bool reloadKeys)
         {
-            string[] keys = new string[0];
+            string[] keys = entryIndexer.GetKeys(reloadKeys);
 
-#if UNITY_EDITOR_WIN
-            using (RegistryKey rootKey = Registry.CurrentUser.OpenSubKey(pathToPrefs))
-            {
-                if (rootKey != null)
-                {
-                    keys = rootKey.GetValueNames();
-                }
-                rootKey.Close();
-            }
-
-            // Clean <key>_h3320113488 nameing
-            keys = keys.Select( (key) => { key = key.Substring(0, key.IndexOf("_h")); return key; } ).ToArray();
-
-#elif UNITY_EDITOR_OSX
-            string homePath = Path.Combine(Environment.GetEnvironmentVariable("HOME"), pathToPrefs);
-            string tmpPath = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "tmpBGToolsPlayerPrefsEncodet.plist");
-
-
-            if(File.Exists(homePath))
-            {
-	            var cmdStr = string.Format(@"-c ""plutil -convert xml1 {0} && cat {0} | perl -nle 'print $& if m{1}' && plutil -convert binary1 {0}""", homePath, "{(?<=<key>)(.*?)(?=</key>)}");
-
-                var process = new System.Diagnostics.Process();
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.FileName = "sh";
-                process.StartInfo.Arguments = cmdStr;
-                process.Start();
-
-                process.WaitForExit();
-
-                keys = process.StandardOutput.ReadToEnd().Split('\n').ToArray();
-
-                // var process = System.Diagnostics.Process.Start("plutil", "-convert xml1 " + homePath + " -o " + tmpPath);
-                // process.WaitForExit();
-
-/*              // Plist not working unity define it as malformed
-                PlistDocument plist = new PlistDocument();
-                plist.ReadFromFile(tmpPath);
-                PlistElementDict rootDict = plist.root;
-                keys = rootDict.values.Keys.ToArray();
-*/
-            // Fix issue of Document Type Declaration (DTD) is prohibited
-            /*     XmlReaderSettings settings = new XmlReaderSettings();
-                settings.ProhibitDtd = false;
-                XmlReader reader = XmlReader.Create(tmpPath, settings);
-
-                XDocument doc = XDocument.Load(reader);
-                XElement plist = doc.Element("plist");
-                XElement dict = plist.Element("dict");
-                IEnumerable<XElement> tags = dict.Elements();
-
-                keys = tags.Where( (a) => a.Name.ToString() == "key").Select( (e) => e.Value ).ToArray();
-
-                process = System.Diagnostics.Process.Start("rm", tmpPath);
-                process.WaitForExit();
-*/          }
-#elif UNITY_EDITOR_LINUX
-            string homePath = Path.Combine(Environment.GetEnvironmentVariable("HOME"), pathToPrefs);
-
-            if(File.Exists(homePath))
-            {
-                XmlReaderSettings settings = new XmlReaderSettings();
-                //settings.ProhibitDtd = false;
-                XmlReader reader = XmlReader.Create(homePath, settings);
-
-                XDocument doc = XDocument.Load(reader);
-
-                keys = doc.Element("unity_prefs").Elements().Select( (e) => e.Attribute("name").Value ).ToArray();
-            }
-#endif
             // keys.ToList().ForEach( e => { Debug.Log(e); } );
 
             // Seperate keys int unity defined and user defined
-            var groups = keys.GroupBy((key) => key.StartsWith("unity.") || key.StartsWith("UnityGraphicsQuality"))
-                      .ToDictionary( (g) => g.Key, (g) => g.ToList());
+            Dictionary<bool, List<string>> groups = keys
+                .GroupBy( (key) => key.StartsWith("unity.") || key.StartsWith("UnityGraphicsQuality") )
+                .ToDictionary( (g) => g.Key, (g) => g.ToList() );
 
             unityDef = (groups.ContainsKey(true)) ? groups[true].ToArray() : new string[0];
             userDef = (groups.ContainsKey(false)) ? groups[false].ToArray() : new string[0];
