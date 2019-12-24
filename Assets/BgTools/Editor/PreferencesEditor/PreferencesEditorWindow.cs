@@ -76,10 +76,10 @@ namespace BgTools.PlayerPreferencesEditor
             entryAccessor = new MacEntryIndexer(pathToPrefs);
 #elif UNITY_EDITOR_LINUX
             pathToPrefs = @".config/unity3d/" + PlayerSettings.companyName + "/" + PlayerSettings.productName + "/prefs";
-            entryAccessor = new LinuxEntryIndexer(pathToPrefs);
+            entryAccessor = new LinuxPrefStorage(pathToPrefs);
 #endif
-            entryAccessor.PrefEntryChangedDelegate = () => { updateView = true; };
-            entryAccessor.StartMonitoring();
+           entryAccessor.PrefEntryChangedDelegate = () => { updateView = true; };
+           entryAccessor.StartMonitoring();
 
             searchfield = new SearchField();
 

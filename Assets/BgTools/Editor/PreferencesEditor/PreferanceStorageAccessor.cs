@@ -7,6 +7,7 @@ using Microsoft.Win32;
 using System.IO;
 #elif UNITY_EDITOR_LINUX
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 #endif
@@ -121,28 +122,24 @@ namespace BgTools.PlayerPreferencesEditor
     {
         FileSystemWatcher fileWatcher;
 
-        public LinuxPrefStorage(string pathToPrefs) : base(pathToPrefs)
+        public LinuxPrefStorage(string pathToPrefs) : base(Path.Combine(Environment.GetEnvironmentVariable("HOME"), pathToPrefs))
         {
             fileWatcher = new FileSystemWatcher();
-            fileWatcher.Path = pathToPrefs;
+            fileWatcher.Path = Path.GetDirectoryName(prefPath);
             fileWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
-            //fileWatcher.Filter = "*.txt";
+            fileWatcher.Filter = "prefs";
 
             fileWatcher.Changed += OnWatchedFileChanged;
-            fileWatcher.Created += OnWatchedFileChanged;
-            fileWatcher.Deleted += OnWatchedFileChanged;
         }
 
         protected override void FetchKeysFromSystem()
         {
             cachedData = new string[0];
 
-            string homePath = Path.Combine(Environment.GetEnvironmentVariable("HOME"), prefPath);
-
-            if (File.Exists(homePath))
+            if (File.Exists(prefPath))
             {
                 XmlReaderSettings settings = new XmlReaderSettings();
-                XmlReader reader = XmlReader.Create(homePath, settings);
+                XmlReader reader = XmlReader.Create(prefPath, settings);
 
                 XDocument doc = XDocument.Load(reader);
 
@@ -171,7 +168,7 @@ namespace BgTools.PlayerPreferencesEditor
 
         private void OnWatchedFileChanged(object source, FileSystemEventArgs e)
         {
-            UnityEngine.Debug.Log("file changed");
+            UnityEngine.Debug.Log("file changed "+ e.ChangeType.ToString());
 
             OnPrefEntryChanged();
         }
@@ -181,18 +178,16 @@ namespace BgTools.PlayerPreferencesEditor
 
     public class MacPrefStorage : PreferanceStorageAccessor
     {
-        public MacPrefStorage(string pathToPrefs) : base(pathToPrefs)
+        public MacPrefStorage(string pathToPrefs) : base(Path.Combine(Environment.GetEnvironmentVariable("HOME"), pathToPrefs))
         { }
 
         protected override void FetchKeysFromSystem()
         {
             cachedData = new string[0];
 
-            string homePath = Path.Combine(Environment.GetEnvironmentVariable("HOME"), prefPath);
-
-            if (File.Exists(homePath))
+            if (File.Exists(prefPath))
             {
-                var cmdStr = string.Format(@"-c ""plutil -convert xml1 {0} && cat {0} | perl -nle 'print $& if m{1}' && plutil -convert binary1 {0}""", homePath, "{(?<=<key>)(.*?)(?=</key>)}");
+                var cmdStr = string.Format(@"-c ""plutil -convert xml1 {0} && cat {0} | perl -nle 'print $& if m{1}' && plutil -convert binary1 {0}""", prefPath, "{(?<=<key>)(.*?)(?=</key>)}");
 
                 var process = new System.Diagnostics.Process();
                 process.StartInfo.UseShellExecute = false;
