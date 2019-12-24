@@ -40,12 +40,14 @@ namespace BgTools.PlayerPreferencesEditor
 
         private Vector2 scrollPos;
 
-        private PreferanceStorageAccessor entryIndexer;
+        private PreferanceStorageAccessor entryAccessor;
 
         private SearchField searchfield;
         private string searchTxt;
 
-        private List<TextValidator> prefKeyValidatorList = new List<TextValidator>()
+        private bool updateView = false;
+
+        private readonly List<TextValidator> prefKeyValidatorList = new List<TextValidator>()
         {
             new TextValidator(TextValidator.ErrorType.Error, @"Invalid character detected. Only letters, numbers, space and _!§$%&/()=?*+~#-]+$ are allowed", @"(^$)|(^[a-zA-Z0-9 _!§$%&/()=?*+~#-]+$)"),
             new TextValidator(TextValidator.ErrorType.Warning, @"The given key already exist. The existing entry would be overridden!", (key) => { return !PlayerPrefs.HasKey(key); })
@@ -68,14 +70,17 @@ namespace BgTools.PlayerPreferencesEditor
 #if UNITY_EDITOR_WIN
             pathToPrefs = @"SOFTWARE\Unity\UnityEditor\" + PlayerSettings.companyName + @"\" + PlayerSettings.productName;
             platformPathPrefix = @"<CurrendUser>";
-            entryIndexer = new WindowsPrefStorage(pathToPrefs);
+            entryAccessor = new WindowsPrefStorage(pathToPrefs);
 #elif UNITY_EDITOR_OSX
             pathToPrefs = @"Library/Preferences/unity." + PlayerSettings.companyName + "." + PlayerSettings.productName + ".plist";
-            entryIndexer = new MacEntryIndexer(pathToPrefs);
+            entryAccessor = new MacEntryIndexer(pathToPrefs);
 #elif UNITY_EDITOR_LINUX
             pathToPrefs = @".config/unity3d/" + PlayerSettings.companyName + "/" + PlayerSettings.productName + "/prefs";
-            entryIndexer = new LinuxEntryIndexer(pathToPrefs);
+            entryAccessor = new LinuxEntryIndexer(pathToPrefs);
 #endif
+            entryAccessor.PrefEntryChangedDelegate = () => { updateView = true; };
+            entryAccessor.StartMonitoring();
+
             searchfield = new SearchField();
 
             // Fix for serialisation issue of static fields
@@ -84,6 +89,23 @@ namespace BgTools.PlayerPreferencesEditor
                 InitReorderedList();
                 PrepareData();
             }
+        }
+
+        // Handel view updates for monitored changes
+        // Necessary to avoid main thread access issue
+        private void Update()
+        {
+            if (updateView)
+            {
+                updateView = false;
+                PrepareData();
+                Repaint();
+            }
+        }
+
+        private void OnDisable()
+        {
+            entryAccessor.StopMonitoring();
         }
 
         private void InitReorderedList()
@@ -142,6 +164,8 @@ namespace BgTools.PlayerPreferencesEditor
                 }
                 if (EditorGUI.EndChangeCheck())
                 {
+                    entryAccessor.IgnoreNextChange();
+
                     switch ((PreferenceEntry.PrefTypes)type.enumValueIndex)
                     {
                         case PreferenceEntry.PrefTypes.Float:
@@ -168,6 +192,8 @@ namespace BgTools.PlayerPreferencesEditor
 
                 if (EditorUtility.DisplayDialog("Warning!", "Are you sure you want to delete this entry from " + tabState + "?", "Yes", "No"))
                 {
+                    entryAccessor.IgnoreNextChange();
+
                     PlayerPrefs.DeleteKey(l.serializedProperty.GetArrayElementAtIndex(l.index).FindPropertyRelative("m_key").stringValue);
                     PlayerPrefs.Save();
 
@@ -184,6 +210,9 @@ namespace BgTools.PlayerPreferencesEditor
                     menu.AddItem(new GUIContent(type.ToString()), false, () =>
                     {
                         TextFieldDialog.OpenDialog("Create new property", "Key for the new property:", prefKeyValidatorList, (key) => {
+
+                            entryAccessor.IgnoreNextChange();
+
                             switch (type)
                             {
                                 case PreferenceEntry.PrefTypes.Float:
@@ -315,6 +344,15 @@ namespace BgTools.PlayerPreferencesEditor
                     unityDefList.DoLayoutList();
                 }
                 GUILayout.EndScrollView();
+
+                GUI.contentColor = (EditorGUIUtility.isProSkin) ? Styles.Colors.LightGray : Styles.Colors.DarkGray;
+
+                GUIContent watcherContent = (entryAccessor.IsMonitoring()) ? new GUIContent(ImageManager.Watching, "Watch changes") : new GUIContent(ImageManager.NotWatching, "Not watching changes");
+                GUILayout.Box(watcherContent, Styles.icon);
+                //GUILayout.Box( (entryAccessor.IsMonitoring()) ? ImageManager.Watching : ImageManager.NotWatching, Styles.icon);
+
+                GUI.contentColor = defaultColor;
+
                 GUILayout.EndVertical();
             }
             catch (InvalidOperationException)
@@ -375,7 +413,7 @@ namespace BgTools.PlayerPreferencesEditor
 
         private void LoadKeys(out string[] userDef, out string[] unityDef, bool reloadKeys)
         {
-            string[] keys = entryIndexer.GetKeys(reloadKeys);
+            string[] keys = entryAccessor.GetKeys(reloadKeys);
 
             // keys.ToList().ForEach( e => { Debug.Log(e); } );
 

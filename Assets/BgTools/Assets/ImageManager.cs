@@ -113,6 +113,32 @@ namespace BgTools.Utils
                 return info;
             }
         }
+
+        private static Texture2D watching;
+        public static Texture2D Watching
+        {
+            get
+            {
+                if(watching == null)
+                {
+                    watching = (Texture2D)AssetDatabase.LoadAssetAtPath(GetAssetDir() + "watching.png", typeof(Texture2D));
+                }
+                return watching;
+            }
+        }
+
+        private static Texture2D notWatching;
+        public static Texture2D NotWatching
+        {
+            get
+            {
+                if (notWatching == null)
+                {
+                    notWatching = (Texture2D)AssetDatabase.LoadAssetAtPath(GetAssetDir() + "not_watching.png", typeof(Texture2D));
+                }
+                return notWatching;
+            }
+        }
     }
 }
 #endif

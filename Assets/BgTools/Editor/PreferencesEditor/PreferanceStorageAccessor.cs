@@ -1,11 +1,11 @@
-﻿#if UNITY_EDITOR_WIN
+﻿using System;
+
+#if UNITY_EDITOR_WIN
 using System.Linq;
 using Microsoft.Win32;
 #elif UNITY_EDITOR_OSX
-using System;
 using System.IO;
 #elif UNITY_EDITOR_LINUX
-using System;
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
@@ -34,14 +34,48 @@ namespace BgTools.PlayerPreferencesEditor
 
             return cachedData;
         }
+
+        public Action PrefEntryChangedDelegate;
+        private bool ignoreNextChange = false;
+
+        public void IgnoreNextChange()
+        {
+            ignoreNextChange = true;
+        }
+
+        protected virtual void OnPrefEntryChanged()
+        {
+            if (ignoreNextChange)
+            {
+                ignoreNextChange = false;
+                return;
+            }
+
+            PrefEntryChangedDelegate();
+        }
+
+        public abstract void StartMonitoring();
+        public abstract void StopMonitoring();
+        public abstract bool IsMonitoring();
     }
 
 #if UNITY_EDITOR_WIN
 
-    public class WindowsPrefStorage: PreferanceStorageAccessor
+    public class WindowsPrefStorage : PreferanceStorageAccessor
     {
+        RegistryMonitor monitor;
+
         public WindowsPrefStorage(string pathToPrefs) : base(pathToPrefs)
-        { }
+        {
+            monitor = new RegistryMonitor(RegistryHive.CurrentUser, prefPath);
+            monitor.RegChanged += new EventHandler(OnRegChanged);
+        }
+
+        private void OnRegChanged(object sender, EventArgs e)
+        {
+            UnityEngine.Debug.Log("registry key has changed");
+            OnPrefEntryChanged();
+        }
 
         protected override void FetchKeysFromSystem()
         {
@@ -57,16 +91,47 @@ namespace BgTools.PlayerPreferencesEditor
             }
 
             // Clean <key>_h3320113488 nameing
-            cachedData = cachedData.Select((key) => { key = key.Substring(0, key.IndexOf("_h")); return key; }).ToArray();
+            cachedData = cachedData.Select((key) => { return key.Substring(0, key.IndexOf("_h")); }).ToArray();
         }
+
+        public override void StartMonitoring()
+        {
+            UnityEngine.Debug.Log("Monitoring: START");
+
+            monitor.Start();
+        }
+
+        public override void StopMonitoring()
+        {
+            UnityEngine.Debug.Log("Monitoring: STOP");
+
+            monitor.Stop();
+        }
+
+        public override bool IsMonitoring()
+        {
+            return monitor.IsMonitoring;
+        }
+
     }
 
 #elif UNITY_EDITOR_LINUX
 
-    public class LinuxPrefStorage : PreferanceEntryIndexer
+    public class LinuxPrefStorage : PreferanceStorageAccessor
     {
+        FileSystemWatcher fileWatcher;
+
         public LinuxPrefStorage(string pathToPrefs) : base(pathToPrefs)
-        { }
+        {
+            fileWatcher = new FileSystemWatcher();
+            fileWatcher.Path = pathToPrefs;
+            fileWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
+            //fileWatcher.Filter = "*.txt";
+
+            fileWatcher.Changed += OnWatchedFileChanged;
+            fileWatcher.Created += OnWatchedFileChanged;
+            fileWatcher.Deleted += OnWatchedFileChanged;
+        }
 
         protected override void FetchKeysFromSystem()
         {
@@ -84,11 +149,37 @@ namespace BgTools.PlayerPreferencesEditor
                 cachedData = doc.Element("unity_prefs").Elements().Select((e) => e.Attribute("name").Value).ToArray();
             }
         }
+
+        public override void StartMonitoring()
+        {
+            UnityEngine.Debug.Log("Monitoring: START");
+
+            fileWatcher.EnableRaisingEvents = true;
+        }
+
+        public override void StopMonitoring()
+        {
+            UnityEngine.Debug.Log("Monitoring: STOP");
+
+            fileWatcher.EnableRaisingEvents = false;
+        }
+
+        public override bool IsMonitoring()
+        {
+            return fileWatcher.EnableRaisingEvents;
+        }
+
+        private void OnWatchedFileChanged(object source, FileSystemEventArgs e)
+        {
+            UnityEngine.Debug.Log("file changed");
+
+            OnPrefEntryChanged();
+        }
     }
 
 #elif UNITY_EDITOR_OSX
 
-    public class MacPrefStorage : PreferanceEntryIndexer
+    public class MacPrefStorage : PreferanceStorageAccessor
     {
         public MacPrefStorage(string pathToPrefs) : base(pathToPrefs)
         { }
