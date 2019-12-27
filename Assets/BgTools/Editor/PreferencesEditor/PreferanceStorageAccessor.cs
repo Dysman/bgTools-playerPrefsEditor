@@ -74,7 +74,7 @@ namespace BgTools.PlayerPreferencesEditor
 
         private void OnRegChanged(object sender, EventArgs e)
         {
-            UnityEngine.Debug.Log("registry key has changed");
+            UnityEngine.Debug.Log("registry key has changed time:"+ DateTime.Now);
             OnPrefEntryChanged();
         }
 

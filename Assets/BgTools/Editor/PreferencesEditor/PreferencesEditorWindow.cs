@@ -46,6 +46,7 @@ namespace BgTools.PlayerPreferencesEditor
         private string searchTxt;
 
         private bool updateView = false;
+        private bool monitoring = false;
 
         private readonly List<TextValidator> prefKeyValidatorList = new List<TextValidator>()
         {
@@ -78,8 +79,11 @@ namespace BgTools.PlayerPreferencesEditor
             pathToPrefs = @".config/unity3d/" + PlayerSettings.companyName + "/" + PlayerSettings.productName + "/prefs";
             entryAccessor = new LinuxPrefStorage(pathToPrefs);
 #endif
-           entryAccessor.PrefEntryChangedDelegate = () => { updateView = true; };
-           entryAccessor.StartMonitoring();
+            entryAccessor.PrefEntryChangedDelegate = () => { updateView = true; };
+
+            monitoring = EditorPrefs.GetBool("DevTools.PlayerPreferencesEditor.WatchingForChanges", false);
+            if(monitoring)
+                entryAccessor.StartMonitoring();
 
             searchfield = new SearchField();
 
@@ -95,6 +99,20 @@ namespace BgTools.PlayerPreferencesEditor
         // Necessary to avoid main thread access issue
         private void Update()
         {
+            bool currValue = EditorPrefs.GetBool("DevTools.PlayerPreferencesEditor.WatchingForChanges", false);
+
+            if (monitoring != currValue)
+            {
+                monitoring = currValue;
+
+                if (monitoring)
+                    entryAccessor.StartMonitoring();
+                else
+                    entryAccessor.StopMonitoring();
+
+                Repaint();
+            }
+
             if (updateView)
             {
                 updateView = false;
@@ -349,7 +367,6 @@ namespace BgTools.PlayerPreferencesEditor
 
                 GUIContent watcherContent = (entryAccessor.IsMonitoring()) ? new GUIContent(ImageManager.Watching, "Watch changes") : new GUIContent(ImageManager.NotWatching, "Not watching changes");
                 GUILayout.Box(watcherContent, Styles.icon);
-                //GUILayout.Box( (entryAccessor.IsMonitoring()) ? ImageManager.Watching : ImageManager.NotWatching, Styles.icon);
 
                 GUI.contentColor = defaultColor;
 
