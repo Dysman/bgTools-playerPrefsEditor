@@ -74,7 +74,7 @@ namespace BgTools.PlayerPreferencesEditor
             entryAccessor = new WindowsPrefStorage(pathToPrefs);
 #elif UNITY_EDITOR_OSX
             pathToPrefs = @"Library/Preferences/unity." + PlayerSettings.companyName + "." + PlayerSettings.productName + ".plist";
-            entryAccessor = new MacEntryIndexer(pathToPrefs);
+            entryAccessor = new MacPrefStorage(pathToPrefs);
 #elif UNITY_EDITOR_LINUX
             pathToPrefs = @".config/unity3d/" + PlayerSettings.companyName + "/" + PlayerSettings.productName + "/prefs";
             entryAccessor = new LinuxPrefStorage(pathToPrefs);

@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Linq;
 
 #if UNITY_EDITOR_WIN
-using System.Linq;
 using Microsoft.Win32;
 #elif UNITY_EDITOR_OSX
 using System.IO;
+using System.Text.RegularExpressions;
 #elif UNITY_EDITOR_LINUX
 using System.IO;
-using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 #endif
@@ -178,16 +178,28 @@ namespace BgTools.PlayerPreferencesEditor
 
     public class MacPrefStorage : PreferanceStorageAccessor
     {
+        FileSystemWatcher fileWatcher;
+
         public MacPrefStorage(string pathToPrefs) : base(Path.Combine(Environment.GetEnvironmentVariable("HOME"), pathToPrefs))
-        { }
+        {
+            fileWatcher = new FileSystemWatcher();
+            fileWatcher.Path = Path.GetDirectoryName(prefPath);
+            fileWatcher.NotifyFilter = NotifyFilters.LastWrite;
+            fileWatcher.Filter = Path.GetFileName(prefPath);
+
+            // MAC delete the old and create a new file insted of updating
+            fileWatcher.Created += OnWatchedFileChanged;
+        }
 
         protected override void FetchKeysFromSystem()
         {
             cachedData = new string[0];
 
+			UnityEngine.Debug.Log("fetch path: "+ prefPath +" exist: " + File.Exists(prefPath));
+
             if (File.Exists(prefPath))
             {
-                var cmdStr = string.Format(@"-c ""plutil -convert xml1 {0} && cat {0} | perl -nle 'print $& if m{1}' && plutil -convert binary1 {0}""", prefPath, "{(?<=<key>)(.*?)(?=</key>)}");
+                var cmdStr = string.Format(@"-c ""plutil -p '{0}'""", prefPath);
 
                 var process = new System.Diagnostics.Process();
                 process.StartInfo.UseShellExecute = false;
@@ -198,10 +210,39 @@ namespace BgTools.PlayerPreferencesEditor
                 process.Start();
 
                 process.WaitForExit();
+                string plist = process.StandardOutput.ReadToEnd();
 
-                cachedData = process.StandardOutput.ReadToEnd().Split('\n').ToArray();
+                MatchCollection matches = Regex.Matches(plist, @"(?: "")(.*)(?:"" =>.*)");
+                cachedData = matches.Cast<Match>().Select((e) => e.Groups[1].Value).ToArray();
             }
         }
+
+        public override void StartMonitoring()
+        {
+            UnityEngine.Debug.Log("Monitoring: START");
+
+            fileWatcher.EnableRaisingEvents = true;
+        }
+
+        public override void StopMonitoring()
+        {
+            UnityEngine.Debug.Log("Monitoring: STOP");
+
+            fileWatcher.EnableRaisingEvents = false;
+        }
+
+        public override bool IsMonitoring()
+        {
+            return fileWatcher.EnableRaisingEvents;
+        }
+
+        private void OnWatchedFileChanged(object source, FileSystemEventArgs e)
+        {
+            UnityEngine.Debug.Log(e.FullPath +" changed type:"+ e.ChangeType.ToString() + " Time:" + DateTime.Now);
+
+            OnPrefEntryChanged();
+        }
+
     }
 #endif
 }
