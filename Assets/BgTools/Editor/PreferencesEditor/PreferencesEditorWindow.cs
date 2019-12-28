@@ -151,7 +151,14 @@ namespace BgTools.PlayerPreferencesEditor
 
             userDefList.drawHeaderCallback = (Rect rect) =>
             {
+                Color defaultColor = GUI.contentColor;
+
                 EditorGUI.LabelField(rect, "User defined");
+                GUI.contentColor = (EditorGUIUtility.isProSkin) ? Styles.Colors.LightGray : Styles.Colors.DarkGray;
+                GUIContent watcherContent = (entryAccessor.IsMonitoring()) ? new GUIContent(ImageManager.Watching, "Watch changes") : new GUIContent(ImageManager.NotWatching, "Not watching changes");
+                EditorGUI.LabelField(new Rect(rect.width - EditorGUIUtility.singleLineHeight, rect.y, EditorGUIUtility.singleLineHeight, EditorGUIUtility.singleLineHeight), watcherContent);
+
+                GUI.contentColor = defaultColor;
             };
             userDefList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
             {
@@ -298,23 +305,28 @@ namespace BgTools.PlayerPreferencesEditor
             try
             {
                 Color defaultColor = GUI.contentColor;
+                GUI.contentColor = (EditorGUIUtility.isProSkin) ? Styles.Colors.LightGray : Styles.Colors.DarkGray;
 
                 GUILayout.BeginVertical();
-                GUILayout.BeginHorizontal();
 
-                GUI.contentColor = (EditorGUIUtility.isProSkin) ? Styles.Colors.LightGray : Styles.Colors.DarkGray;
-                GUILayout.Box(ImageManager.GetOsIcon(), Styles.icon);
-                GUI.contentColor = defaultColor;
+                GUILayout.BeginHorizontal(EditorStyles.toolbar);
 
-                GUILayout.TextField(platformPathPrefix + Path.DirectorySeparatorChar + pathToPrefs, GUILayout.MinWidth(200));
+                EditorGUI.BeginChangeCheck();
+                searchTxt = searchfield.OnToolbarGUI(searchTxt);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    PrepareData(false);
+                }
 
-                GUI.contentColor = (EditorGUIUtility.isProSkin) ? Styles.Colors.LightGray : Styles.Colors.DarkGray;
-                if (GUILayout.Button(new GUIContent(ImageManager.Refresh, "Refresh"), Styles.miniButton))
+                GUILayout.FlexibleSpace();
+
+                EditorGUIUtility.SetIconSize(new Vector2(14.0f, 14.0f));
+                if (GUILayout.Button(new GUIContent(ImageManager.Refresh, "Refresh"), EditorStyles.toolbarButton))
                 {
                     PlayerPrefs.Save();
                     PrepareData();
                 }
-                if (GUILayout.Button(new GUIContent(ImageManager.Trash, "Delete all"), Styles.miniButton))
+                if (GUILayout.Button(new GUIContent(ImageManager.Trash, "Delete all"), EditorStyles.toolbarButton))
                 {
                     // ToDo: remove tabstate if clear that editorprefs not supported
                     var tabState = "PlayerPrefs";
@@ -324,18 +336,16 @@ namespace BgTools.PlayerPreferencesEditor
                         PrepareData();
                     }
                 }
-                GUI.contentColor = defaultColor;
+                EditorGUIUtility.SetIconSize(new Vector2(0.0f, 0.0f));
 
                 GUILayout.EndHorizontal();
 
-                EditorGUI.BeginChangeCheck();
-                searchTxt = searchfield.OnGUI(searchTxt);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    PrepareData(false);
-                }
+                GUILayout.BeginHorizontal();
 
-                GUILayout.Space(3);
+                GUILayout.Box(ImageManager.GetOsIcon(), Styles.icon);
+                GUILayout.TextField(platformPathPrefix + Path.DirectorySeparatorChar + pathToPrefs, GUILayout.MinWidth(200));
+
+                GUILayout.EndHorizontal();
 
                 //GUILayout.BeginHorizontal();
 
@@ -362,15 +372,9 @@ namespace BgTools.PlayerPreferencesEditor
                     unityDefList.DoLayoutList();
                 }
                 GUILayout.EndScrollView();
-
-                GUI.contentColor = (EditorGUIUtility.isProSkin) ? Styles.Colors.LightGray : Styles.Colors.DarkGray;
-
-                GUIContent watcherContent = (entryAccessor.IsMonitoring()) ? new GUIContent(ImageManager.Watching, "Watch changes") : new GUIContent(ImageManager.NotWatching, "Not watching changes");
-                GUILayout.Box(watcherContent, Styles.icon);
+                GUILayout.EndVertical();
 
                 GUI.contentColor = defaultColor;
-
-                GUILayout.EndVertical();
             }
             catch (InvalidOperationException)
             { }
