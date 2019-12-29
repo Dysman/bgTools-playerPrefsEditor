@@ -74,7 +74,6 @@ namespace BgTools.PlayerPreferencesEditor
 
         private void OnRegChanged(object sender, EventArgs e)
         {
-            UnityEngine.Debug.Log("registry key has changed time:"+ DateTime.Now);
             OnPrefEntryChanged();
         }
 
@@ -97,15 +96,11 @@ namespace BgTools.PlayerPreferencesEditor
 
         public override void StartMonitoring()
         {
-            UnityEngine.Debug.Log("Monitoring: START");
-
             monitor.Start();
         }
 
         public override void StopMonitoring()
         {
-            UnityEngine.Debug.Log("Monitoring: STOP");
-
             monitor.Stop();
         }
 
@@ -149,15 +144,11 @@ namespace BgTools.PlayerPreferencesEditor
 
         public override void StartMonitoring()
         {
-            UnityEngine.Debug.Log("Monitoring: START");
-
             fileWatcher.EnableRaisingEvents = true;
         }
 
         public override void StopMonitoring()
         {
-            UnityEngine.Debug.Log("Monitoring: STOP");
-
             fileWatcher.EnableRaisingEvents = false;
         }
 
@@ -168,8 +159,6 @@ namespace BgTools.PlayerPreferencesEditor
 
         private void OnWatchedFileChanged(object source, FileSystemEventArgs e)
         {
-            UnityEngine.Debug.Log("file changed "+ e.ChangeType.ToString());
-
             OnPrefEntryChanged();
         }
     }
@@ -187,15 +176,13 @@ namespace BgTools.PlayerPreferencesEditor
             fileWatcher.NotifyFilter = NotifyFilters.LastWrite;
             fileWatcher.Filter = Path.GetFileName(prefPath);
 
-            // MAC delete the old and create a new file insted of updating
+            // MAC delete the old and create a new file instead of updating
             fileWatcher.Created += OnWatchedFileChanged;
         }
 
         protected override void FetchKeysFromSystem()
         {
             cachedData = new string[0];
-
-			UnityEngine.Debug.Log("fetch path: "+ prefPath +" exist: " + File.Exists(prefPath));
 
             if (File.Exists(prefPath))
             {
@@ -219,15 +206,11 @@ namespace BgTools.PlayerPreferencesEditor
 
         public override void StartMonitoring()
         {
-            UnityEngine.Debug.Log("Monitoring: START");
-
             fileWatcher.EnableRaisingEvents = true;
         }
 
         public override void StopMonitoring()
         {
-            UnityEngine.Debug.Log("Monitoring: STOP");
-
             fileWatcher.EnableRaisingEvents = false;
         }
 
@@ -238,8 +221,6 @@ namespace BgTools.PlayerPreferencesEditor
 
         private void OnWatchedFileChanged(object source, FileSystemEventArgs e)
         {
-            UnityEngine.Debug.Log(e.FullPath +" changed type:"+ e.ChangeType.ToString() + " Time:" + DateTime.Now);
-
             OnPrefEntryChanged();
         }
 

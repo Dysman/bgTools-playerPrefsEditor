@@ -18,13 +18,6 @@ namespace BgTools.PlayerPreferencesEditor
         private readonly string ERROR_VALUE_STR = "<bgTool_error_24072017>";
         #endregion //ErrorValues
 
-        //private TabState tabState = TabState.PlayerPrefs;
-        //private enum TabState
-        //{
-        //    PlayerPrefs,
-        //    EditorPrefs
-        //}
-
         private static string pathToPrefs = String.Empty;
         private static string platformPathPrefix = @"~";
 
@@ -209,13 +202,10 @@ namespace BgTools.PlayerPreferencesEditor
             };
             userDefList.onRemoveCallback = (ReorderableList l) =>
             {
-                // ToDo: remove tabstate if clear that editorprefs not supported
-                var tabState = "PlayerPrefs";
-
                 userDefList.ReleaseKeyboardFocus();
                 unityDefList.ReleaseKeyboardFocus();
 
-                if (EditorUtility.DisplayDialog("Warning!", "Are you sure you want to delete this entry from " + tabState + "?", "Yes", "No"))
+                if (EditorUtility.DisplayDialog("Warning!", "Are you sure you want to delete this entry from PlayerPrefs? ", "Yes", "No"))
                 {
                     entryAccessor.IgnoreNextChange();
 
@@ -328,9 +318,7 @@ namespace BgTools.PlayerPreferencesEditor
                 }
                 if (GUILayout.Button(new GUIContent(ImageManager.Trash, "Delete all"), EditorStyles.toolbarButton))
                 {
-                    // ToDo: remove tabstate if clear that editorprefs not supported
-                    var tabState = "PlayerPrefs";
-                    if (EditorUtility.DisplayDialog("Warning!", "Are you sure you want to delete ALL entries from " + tabState + "?\n\nUse with caution! Unity defined keys are affected too.", "Yes", "No"))
+                    if (EditorUtility.DisplayDialog("Warning!", "Are you sure you want to delete ALL entries from PlayerPrefs?\n\nUse with caution! Unity defined keys are affected too.", "Yes", "No"))
                     {
                         PlayerPrefs.DeleteAll();
                         PrepareData();
@@ -346,18 +334,6 @@ namespace BgTools.PlayerPreferencesEditor
                 GUILayout.TextField(platformPathPrefix + Path.DirectorySeparatorChar + pathToPrefs, GUILayout.MinWidth(200));
 
                 GUILayout.EndHorizontal();
-
-                //GUILayout.BeginHorizontal();
-
-                //if (GUILayout.Toggle(tabState == TabState.PlayerPrefs, "PlayerPrefs", EditorStyles.toolbarButton))
-                //    tabState = TabState.PlayerPrefs;
-
-                //GUI.enabled = false;
-                //if (GUILayout.Toggle(tabState == TabState.EditorPrefs, "EditorPrefs", EditorStyles.toolbarButton))
-                //    tabState = TabState.EditorPrefs;
-                //GUI.enabled = true;
-
-                //GUILayout.EndHorizontal();
 
                 scrollPos = GUILayout.BeginScrollView(scrollPos);
                 serializedObject.Update();
