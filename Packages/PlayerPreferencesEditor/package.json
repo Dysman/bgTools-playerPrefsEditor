@@ -1,0 +1,25 @@
+{
+  "name": "com.bgtools.playerpreferenceseditor",
+  "displayName": "Player Preferences Editor",
+  "version": "1.0.0",
+  "unity": "2017.4",
+  "description": "Tool extension for the Unity Editor that enables easy access to the player preferences over a simple UI. Allows to view, add, remove and modify entries on the development machine.",
+  "author": {
+    "name": "Benjamin Granzow",
+    "email": "kontakt@bgranzow.de",
+    "url": "https://github.com/Dysman/bgTools-playerPreferencesEditor"
+  },
+  "keywords": [
+    "Tool",
+    "Editor",
+    "bgTools",
+    "PlayerPrefs"
+  ],
+  "samples": [
+    {
+      "displayName": "Test Value Menu",
+      "description": "Adds multiple entries into the tool menu to inject PlayerPrefs test entries",
+      "path": "Samples~/TestValueMenu/Editor"
+    }
+  ]
+}
