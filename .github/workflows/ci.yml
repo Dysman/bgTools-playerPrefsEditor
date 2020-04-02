@@ -24,11 +24,11 @@ jobs:
           git mv Samples Samples~
           rm -f Samples.meta
         fi
-#    - name: copy markdown files
-#      run: |
-#        git checkout master README.md
-#        git checkout master LICENSE.md
-#        git checkout master CHANGELOG.md
+    - name: copy markdown files
+      run: |
+        git checkout master README.md
+        git checkout master LICENSE.md
+        git checkout master CHANGELOG.md
     - name: commit
       run: |
         git config --global user.name 'github-bot'
