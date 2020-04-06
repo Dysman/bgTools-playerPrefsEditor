@@ -1,7 +1,7 @@
 ﻿namespace BgTools.PlayerPreferencesEditor
 {
     [System.Serializable]
-    public class PreferenceEntry 
+    public class PreferenceEntry
     {
         public enum PrefTypes
         {
