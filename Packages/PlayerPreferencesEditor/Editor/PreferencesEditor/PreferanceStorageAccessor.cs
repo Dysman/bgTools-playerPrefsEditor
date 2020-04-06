@@ -168,6 +168,7 @@ namespace BgTools.PlayerPreferencesEditor
     public class MacPrefStorage : PreferanceStorageAccessor
     {
         FileSystemWatcher fileWatcher;
+        bool macFileChangeIgnored = false;
 
         public MacPrefStorage(string pathToPrefs) : base(Path.Combine(Environment.GetEnvironmentVariable("HOME"), pathToPrefs))
         {
@@ -221,6 +222,14 @@ namespace BgTools.PlayerPreferencesEditor
 
         private void OnWatchedFileChanged(object source, FileSystemEventArgs e)
         {
+            // Workaround to skip the first incomplete change from MAC OS
+            if (!macFileChangeIgnored)
+            {
+                macFileChangeIgnored = true;
+                return;
+            }
+
+            macFileChangeIgnored = false;
             OnPrefEntryChanged();
         }
 
