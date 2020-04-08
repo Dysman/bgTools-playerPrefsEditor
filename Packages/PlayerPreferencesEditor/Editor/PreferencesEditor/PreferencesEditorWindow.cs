@@ -51,7 +51,7 @@ namespace BgTools.PlayerPreferencesEditor
         static void ShowWindow()
         {
             PreferencesEditorWindow window = EditorWindow.GetWindow<PreferencesEditorWindow>(false, "Prefs Editor");
-            window.minSize = new Vector2(400.0f, 300.0f);
+            window.minSize = new Vector2(270.0f, 300.0f);
             window.name = "Prefs Editor";
 
             //window.titleContent = EditorGUIUtility.IconContent("SettingsIcon"); // Icon
@@ -267,18 +267,18 @@ namespace BgTools.PlayerPreferencesEditor
 
                 GUI.enabled = false;
                 EditorGUI.LabelField(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight), new GUIContent(key.stringValue, key.stringValue));
-                EditorGUI.PropertyField(new Rect(rect.x + 100, rect.y, rect.width - 100 - 231, EditorGUIUtility.singleLineHeight), type, GUIContent.none);
+                EditorGUI.PropertyField(new Rect(rect.x + 100, rect.y, 60, EditorGUIUtility.singleLineHeight), type, GUIContent.none);
 
                 switch ((PreferenceEntry.PrefTypes)type.enumValueIndex)
                 {
                     case PreferenceEntry.PrefTypes.Float:
-                        EditorGUI.DelayedFloatField(new Rect(rect.x + rect.width - 229, rect.y, 229, EditorGUIUtility.singleLineHeight), floatValue, GUIContent.none);
+                        EditorGUI.DelayedFloatField(new Rect(rect.x + 161, rect.y, rect.width - 160, EditorGUIUtility.singleLineHeight), floatValue, GUIContent.none);
                         break;
                     case PreferenceEntry.PrefTypes.Int:
-                        EditorGUI.DelayedIntField(new Rect(rect.x + rect.width - 229, rect.y, 229, EditorGUIUtility.singleLineHeight), intValue, GUIContent.none);
+                        EditorGUI.DelayedIntField(new Rect(rect.x + 161, rect.y, rect.width - 160, EditorGUIUtility.singleLineHeight), intValue, GUIContent.none);
                         break;
                     case PreferenceEntry.PrefTypes.String:
-                        EditorGUI.DelayedTextField(new Rect(rect.x + rect.width - 229, rect.y, 229, EditorGUIUtility.singleLineHeight), strValue, GUIContent.none);
+                        EditorGUI.DelayedTextField(new Rect(rect.x + 161, rect.y, rect.width - 160, EditorGUIUtility.singleLineHeight), strValue, GUIContent.none);
                         break;
                 }
                 GUI.enabled = true;
