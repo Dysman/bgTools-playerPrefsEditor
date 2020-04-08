@@ -84,7 +84,6 @@ namespace BgTools.Utils
                     Icon.fixedWidth = 15.0f;
                     Icon.fixedHeight = 15.0f;
                     Icon.margin = new RectOffset(2, 2, 2, 2);
-                    Icon.contentOffset = new Vector2(2.0f, 0.0f);
                 }
                 return Icon;
             }
