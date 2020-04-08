@@ -37,9 +37,12 @@ namespace BgTools.PlayerPreferencesEditor
 
         private SearchField searchfield;
         private string searchTxt;
+        private static GUIContent[] spinWheelImgs;
+        private int loadingSpinnerFrame;
 
         private bool updateView = false;
         private bool monitoring = false;
+        private bool showLoadingIndicatorOverlay = false;
 
         private readonly List<TextValidator> prefKeyValidatorList = new List<TextValidator>()
         {
@@ -86,12 +89,22 @@ namespace BgTools.PlayerPreferencesEditor
                 InitReorderedList();
                 PrepareData();
             }
+
+            spinWheelImgs = new GUIContent[12];
+            for (int i = 0; i < 12; i++)
+                spinWheelImgs[i] = EditorGUIUtility.IconContent("WaitSpin" + i.ToString("00"));
         }
 
         // Handel view updates for monitored changes
         // Necessary to avoid main thread access issue
         private void Update()
         {
+            if (showLoadingIndicatorOverlay)
+            {
+                loadingSpinnerFrame = (int)Mathf.Repeat(Time.realtimeSinceStartup * 10, 11.99f);
+                Repaint();
+            }
+
             bool currValue = EditorPrefs.GetBool("DevTools.PlayerPreferencesEditor.WatchingForChanges", false);
 
             if (monitoring != currValue)
@@ -167,7 +180,7 @@ namespace BgTools.PlayerPreferencesEditor
                 EditorGUI.LabelField(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight), new GUIContent(key.stringValue, key.stringValue));
                 GUI.enabled = false;
                 EditorGUI.PropertyField(new Rect(rect.x + 100, rect.y, 60, EditorGUIUtility.singleLineHeight), type, GUIContent.none);
-                GUI.enabled = true;
+                GUI.enabled = !showLoadingIndicatorOverlay;
                 switch ((PreferenceEntry.PrefTypes)type.enumValueIndex)
                 {
                     case PreferenceEntry.PrefTypes.Float:
@@ -281,7 +294,7 @@ namespace BgTools.PlayerPreferencesEditor
                         EditorGUI.DelayedTextField(new Rect(rect.x + 161, rect.y, rect.width - 160, EditorGUIUtility.singleLineHeight), strValue, GUIContent.none);
                         break;
                 }
-                GUI.enabled = true;
+                GUI.enabled = !showLoadingIndicatorOverlay;
             };
             unityDefList.drawHeaderCallback = (Rect rect) =>
             {
@@ -294,6 +307,11 @@ namespace BgTools.PlayerPreferencesEditor
             // Need to catch 'Stack empty' error on linux
             try
             {
+                if (showLoadingIndicatorOverlay)
+                {
+                    GUI.enabled = false;
+                }
+
                 Color defaultColor = GUI.contentColor;
                 GUI.contentColor = (EditorGUIUtility.isProSkin) ? Styles.Colors.LightGray : Styles.Colors.DarkGray;
 
@@ -349,6 +367,29 @@ namespace BgTools.PlayerPreferencesEditor
                 }
                 GUILayout.EndScrollView();
                 GUILayout.EndVertical();
+
+                GUI.enabled = true;
+
+                if (showLoadingIndicatorOverlay)
+                {
+                    GUILayout.BeginArea(new Rect(position.size.x * 0.5f - 30, position.size.y * 0.5f - 25, 60, 50), GUI.skin.box);
+                    GUILayout.FlexibleSpace();
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.FlexibleSpace();
+                    GUILayout.Box(spinWheelImgs[loadingSpinnerFrame], Styles.icon);
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.FlexibleSpace();
+                    GUILayout.Label("Loading");
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndArea();
+                }
 
                 GUI.contentColor = defaultColor;
             }
