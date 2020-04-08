@@ -55,6 +55,9 @@ namespace BgTools.PlayerPreferencesEditor
             PrefEntryChangedDelegate();
         }
 
+        public Action StartLoadingDelegate;
+        public Action StopLoadingDelegate;
+
         public abstract void StartMonitoring();
         public abstract void StopMonitoring();
         public abstract bool IsMonitoring();
@@ -226,10 +229,12 @@ namespace BgTools.PlayerPreferencesEditor
             if (!macFileChangeIgnored)
             {
                 macFileChangeIgnored = true;
+                StartLoadingDelegate();
                 return;
             }
 
             macFileChangeIgnored = false;
+            StopLoadingDelegate();
             OnPrefEntryChanged();
         }
 
