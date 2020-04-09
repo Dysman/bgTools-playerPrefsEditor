@@ -62,6 +62,21 @@ namespace BgTools.Utils
             }
         }
 
+        private static GUIContent[] spinWheelIcons;
+        public static GUIContent[] SpinWheelIcons
+        {
+            get
+            {
+                if(spinWheelIcons == null)
+                {
+                    spinWheelIcons = new GUIContent[12];
+                    for (int i = 0; i < 12; i++)
+                        spinWheelIcons[i] = EditorGUIUtility.IconContent("WaitSpin" + i.ToString("00"));
+                }
+                return spinWheelIcons;
+            }
+        }
+
         private static Texture2D refresh;
         public static Texture2D Refresh
         {

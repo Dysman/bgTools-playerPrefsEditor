@@ -37,7 +37,6 @@ namespace BgTools.PlayerPreferencesEditor
 
         private SearchField searchfield;
         private string searchTxt;
-        private static GUIContent[] spinWheelImgs;
         private int loadingSpinnerFrame;
 
         private bool updateView = false;
@@ -91,10 +90,6 @@ namespace BgTools.PlayerPreferencesEditor
                 InitReorderedList();
                 PrepareData();
             }
-
-            spinWheelImgs = new GUIContent[12];
-            for (int i = 0; i < 12; i++)
-                spinWheelImgs[i] = EditorGUIUtility.IconContent("WaitSpin" + i.ToString("00"));
         }
 
         // Handel view updates for monitored changes
@@ -379,7 +374,7 @@ namespace BgTools.PlayerPreferencesEditor
 
                     GUILayout.BeginHorizontal();
                     GUILayout.FlexibleSpace();
-                    GUILayout.Box(spinWheelImgs[loadingSpinnerFrame], Styles.icon);
+                    GUILayout.Box(ImageManager.SpinWheelIcons[loadingSpinnerFrame], Styles.icon);
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
 
