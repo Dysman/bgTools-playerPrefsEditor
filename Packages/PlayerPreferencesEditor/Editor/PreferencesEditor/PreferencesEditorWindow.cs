@@ -46,7 +46,7 @@ namespace BgTools.PlayerPreferencesEditor
         private readonly List<TextValidator> prefKeyValidatorList = new List<TextValidator>()
         {
             new TextValidator(TextValidator.ErrorType.Error, @"Invalid character detected. Only letters, numbers, space and _!§$%&/()=?*+~#-]+$ are allowed", @"(^$)|(^[a-zA-Z0-9 _!§$%&/()=?*+~#-]+$)"),
-            new TextValidator(TextValidator.ErrorType.Warning, @"The given key already exist. The existing entry would be overridden!", (key) => { return !PlayerPrefs.HasKey(key); })
+            new TextValidator(TextValidator.ErrorType.Warning, @"The given key already exist. The existing entry would be overwritten!", (key) => { return !PlayerPrefs.HasKey(key); })
         };
 
         [MenuItem("Tools/BG Tools/Player Preferences Editor", false, 1)]
