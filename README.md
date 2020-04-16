@@ -6,10 +6,19 @@ Tool extension for the Unity Editor that enables easy access to the player prefe
 
 ![Preference editor window](https://www.bgranzow.de/downloads/PlayerPrefsEditorV1.png)
 
+## Features
+
+* Add, remove and edit PlayerPrefs
+* Intuitive visual editor
+* Works with standard Unity PlayerPrefs
+* Monitors changes from code
+* Supports all editors (windows, linux, mac)
+* Lightweight dockable for full integration in your workflow
+* Supports both skins (personal, professional)
+
 ## Requirements
 
 Unity Version: 2017.4.3 (LTS) or higher
-
 Editor Version: Windows, MacOS, Linux
 
 ## Installation
