@@ -20,6 +20,11 @@
       "displayName": "Test Value Menu",
       "description": "Adds multiple entries into the tool menu to inject PlayerPrefs test entries",
       "path": "Samples~/TestValueMenu/Editor"
+    },
+    {
+      "displayName": "Sample Scene",
+      "description": "Simlple UI that manipulates PlayerPrefs entries on runtime",
+      "path": "Samples~/SampleScene"
     }
   ]
 }
