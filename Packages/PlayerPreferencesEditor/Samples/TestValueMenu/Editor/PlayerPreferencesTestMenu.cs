@@ -21,7 +21,7 @@ public class PlayerPreferencesTestMenu {
     [MenuItem("Tools/BG Tools/Player Preferences Test Values/AddEntry Float")]
     public static void addTestValueFloat()
     {
-        PlayerPrefs.SetFloat("float", 3.14f);
+        PlayerPrefs.SetFloat("Float", 3.14f);
         PlayerPrefs.Save();
     }
 
