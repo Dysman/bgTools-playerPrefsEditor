@@ -8,5 +8,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support new Unity Editor UI system
 - Alternative monitoring refresh mode for on 'leave playmode'
 
-## [1.0.0] - 2020-03-30
-This is the first release of Player Preferences Editor, as a upm package.
+## [1.0.0] - 2020-04-17
+This is the first release of Player Preferences Editor.
