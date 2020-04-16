@@ -6,48 +6,41 @@ public class PlayerPrefsController : MonoBehaviour
     #region Add
     public void AddTestStrings()
     {
-        PlayerPrefs.SetString("String", "boing");
-        PlayerPrefs.SetString("String2", "foo");
-        //PlayerPrefs.Save();
+        PlayerPrefs.SetString("Runtime_String", "boing");
+        PlayerPrefs.SetString("Runtime_String2", "foo");
     }
 
     public void AddTestInt()
     {
-        PlayerPrefs.SetInt("Int", 1234);
-        //PlayerPrefs.Save();
+        PlayerPrefs.SetInt("Runtime_Int", 1234);
     }
 
     public void AddTestFloat()
     {
-        PlayerPrefs.SetFloat("Float", 3.14f);
-        //PlayerPrefs.Save();
+        PlayerPrefs.SetFloat("Runtime_Float", 3.14f);
     }
     #endregion
 
     #region Remove
     public void RemoveTestStrings()
     {
-        PlayerPrefs.DeleteKey("String");
-        PlayerPrefs.DeleteKey("String2");
-        //PlayerPrefs.Save();
+        PlayerPrefs.DeleteKey("Runtime_String");
+        PlayerPrefs.DeleteKey("Runtime_String2");
     }
 
     public void RemoveTestInt()
     {
-        PlayerPrefs.DeleteKey("Int");
-        //PlayerPrefs.Save();
+        PlayerPrefs.DeleteKey("Runtime_Int");
     }
 
     public void RemoveTestFloat()
     {
-        PlayerPrefs.DeleteKey("Float");
-        //PlayerPrefs.Save();
+        PlayerPrefs.DeleteKey("Runtime_Float");
     }
 
     public void DeleteAll()
     {
         PlayerPrefs.DeleteAll();
-        //PlayerPrefs.Save();
     }
     #endregion
 }
