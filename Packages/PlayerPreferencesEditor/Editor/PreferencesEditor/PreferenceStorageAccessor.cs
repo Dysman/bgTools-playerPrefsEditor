@@ -37,7 +37,7 @@ namespace BgTools.PlayerPreferencesEditor
         }
 
         public Action PrefEntryChangedDelegate;
-        private bool ignoreNextChange = false;
+        protected bool ignoreNextChange = false;
 
         public void IgnoreNextChange()
         {
@@ -170,11 +170,15 @@ namespace BgTools.PlayerPreferencesEditor
 
     public class MacPrefStorage : PreferanceStorageAccessor
     {
-        FileSystemWatcher fileWatcher;
-        bool macFileChangeIgnored = false;
+        private FileSystemWatcher fileWatcher;
+        private DirectoryInfo prefsDirInfo;
+        private String prefsFileNameWithoutExtension;
 
         public MacPrefStorage(string pathToPrefs) : base(Path.Combine(Environment.GetEnvironmentVariable("HOME"), pathToPrefs))
         {
+            prefsDirInfo = new DirectoryInfo(Path.GetDirectoryName(prefPath));
+            prefsFileNameWithoutExtension = Path.GetFileNameWithoutExtension(prefPath);
+
             fileWatcher = new FileSystemWatcher();
             fileWatcher.Path = Path.GetDirectoryName(prefPath);
             fileWatcher.NotifyFilter = NotifyFilters.LastWrite;
@@ -186,6 +190,18 @@ namespace BgTools.PlayerPreferencesEditor
 
         protected override void FetchKeysFromSystem()
         {
+            // Workaround to avoid incomplete tmp phase from MAC OS
+            foreach (FileInfo info in prefsDirInfo.GetFiles())
+            {
+                // Check if tmp PlayerPrefs file exist
+                if (info.FullName.Contains(prefsFileNameWithoutExtension) && !info.FullName.EndsWith(".plist"))
+                {
+                    StartLoadingDelegate();
+                    return;
+                }
+            }
+            StopLoadingDelegate();
+
             cachedData = new string[0];
 
             if (File.Exists(prefPath))
@@ -225,16 +241,6 @@ namespace BgTools.PlayerPreferencesEditor
 
         private void OnWatchedFileChanged(object source, FileSystemEventArgs e)
         {
-            // Workaround to skip the first incomplete change from MAC OS
-            if (!macFileChangeIgnored)
-            {
-                macFileChangeIgnored = true;
-                StartLoadingDelegate();
-                return;
-            }
-
-            macFileChangeIgnored = false;
-            StopLoadingDelegate();
             OnPrefEntryChanged();
         }
 
