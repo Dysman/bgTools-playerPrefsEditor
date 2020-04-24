@@ -1,7 +1,7 @@
 {
   "name": "com.bgtools.playerpreferenceseditor",
   "displayName": "Player Preferences Editor",
-  "version": "1.0.0-preview",
+  "version": "1.0.0",
   "unity": "2017.4",
   "description": "Tool extension for the Unity Editor that enables easy access to the player preferences over a simple UI. Allows to view, add, remove and modify entries on the development machine.",
   "author": {
@@ -23,7 +23,7 @@
     },
     {
       "displayName": "Sample Scene",
-      "description": "Simlple UI that manipulates PlayerPrefs entries on runtime",
+      "description": "Simple UI that manipulates PlayerPrefs entries on runtime",
       "path": "Samples~/SampleScene"
     }
   ]
