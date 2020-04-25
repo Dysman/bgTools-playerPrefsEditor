@@ -1,8 +1,6 @@
 {
-    "name": "Unity.PlayerPreferencesEditor.Editor",
-    "references": [
-        "Unity.PlayerPreferencesEditor.EditorResources"
-    ],
+    "name": "Unity.PlayerPreferencesEditor.Samples.TestValueMenu.Editor",
+    "references": [],
     "includePlatforms": [
         "Editor"
     ],

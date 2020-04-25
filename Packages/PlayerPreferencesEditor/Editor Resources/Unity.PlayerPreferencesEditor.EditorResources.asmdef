@@ -1,7 +1,6 @@
 {
-    "name": "Unity.PlayerPreferencesEditor.Assets",
+    "name": "Unity.PlayerPreferencesEditor.EditorResources",
     "references": [],
-    "optionalUnityReferences": [],
     "includePlatforms": [
         "Editor"
     ],
@@ -10,5 +9,7 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": []
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
