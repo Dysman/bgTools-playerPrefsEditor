@@ -223,7 +223,7 @@ namespace BgTools.PlayerPreferencesEditor
                     PlayerPrefs.Save();
 
                     ReorderableList.defaultBehaviours.DoRemoveButton(l);
-                    //PrepareData();
+                    PrepareData();
                     GUIUtility.ExitGUI();
                 }
             };
