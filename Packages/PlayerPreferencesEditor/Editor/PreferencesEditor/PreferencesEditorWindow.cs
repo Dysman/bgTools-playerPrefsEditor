@@ -224,6 +224,7 @@ namespace BgTools.PlayerPreferencesEditor
 
                     ReorderableList.defaultBehaviours.DoRemoveButton(l);
                     //PrepareData();
+                    GUIUtility.ExitGUI();
                 }
             };
 
@@ -337,6 +338,7 @@ namespace BgTools.PlayerPreferencesEditor
                     {
                         PlayerPrefs.DeleteAll();
                         PrepareData();
+                        GUIUtility.ExitGUI();
                     }
                 }
                 EditorGUIUtility.SetIconSize(new Vector2(0.0f, 0.0f));
