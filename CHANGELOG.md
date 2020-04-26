@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Support new Unity Editor UI system
-- Alternative monitoring refresh mode for on 'leave playmode'
+- Switch to unity internal icons
 
-## [1.0.0] - 2020-04-17
+## [1.0.0] - 2020-04-28
 This is the first release of Player Preferences Editor.
