@@ -99,6 +99,7 @@ namespace BgTools.PlayerPreferencesEditor
             if (showLoadingIndicatorOverlay)
             {
                 loadingSpinnerFrame = (int)Mathf.Repeat(Time.realtimeSinceStartup * 10, 11.99f);
+                PrepareData();
                 Repaint();
             }
 
