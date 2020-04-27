@@ -1,8 +1,12 @@
 {
-    "name": "Unity.PlayerPreferencesEditor.Samples.SampleScene",
-    "references": [],
+    "name": "Unity.PlayerPrefsEditor.Editor",
+    "references": [
+        "Unity.PlayerPrefsEditor.EditorResources"
+    ],
     "optionalUnityReferences": [],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

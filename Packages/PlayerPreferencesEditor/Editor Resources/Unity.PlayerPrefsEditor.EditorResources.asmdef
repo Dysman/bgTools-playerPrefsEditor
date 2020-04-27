@@ -1,6 +1,7 @@
 {
-    "name": "Unity.PlayerPreferencesEditor.Samples.TestValueMenu.Editor",
+    "name": "Unity.PlayerPrefsEditor.EditorResources",
     "references": [],
+    "optionalUnityReferences": [],
     "includePlatforms": [
         "Editor"
     ],
@@ -9,7 +10,5 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": [],
-    "noEngineReferences": false
+    "defineConstraints": []
 }

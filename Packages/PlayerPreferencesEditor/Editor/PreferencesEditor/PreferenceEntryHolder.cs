@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace BgTools.PlayerPreferencesEditor
+namespace BgTools.PlayerPrefsEditor
 {
     [System.Serializable]
     public class PreferenceEntryHolder : ScriptableObject

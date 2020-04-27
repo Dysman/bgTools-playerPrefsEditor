@@ -9,4 +9,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Switch to unity internal icons
 
 ## [1.0.0] - 2020-04-28
-This is the first release of Player Preferences Editor.
+This is the first release of PlayerPrefs Editor.

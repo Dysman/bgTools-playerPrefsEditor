@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using BgTools.Utils;
 using BgTools.Dialogs;
 
-namespace BgTools.PlayerPreferencesEditor
+namespace BgTools.PlayerPrefsEditor
 {
     public class PreferencesEditorWindow : EditorWindow
     {
@@ -49,7 +49,7 @@ namespace BgTools.PlayerPreferencesEditor
             new TextValidator(TextValidator.ErrorType.Warning, @"The given key already exist. The existing entry would be overwritten!", (key) => { return !PlayerPrefs.HasKey(key); })
         };
 
-        [MenuItem("Tools/BG Tools/Player Preferences Editor", false, 1)]
+        [MenuItem("Tools/BG Tools/PlayerPrefs Editor", false, 1)]
         static void ShowWindow()
         {
             PreferencesEditorWindow window = EditorWindow.GetWindow<PreferencesEditorWindow>(false, "Prefs Editor");
@@ -78,7 +78,7 @@ namespace BgTools.PlayerPreferencesEditor
 #endif
             entryAccessor.PrefEntryChangedDelegate = () => { updateView = true; };
 
-            monitoring = EditorPrefs.GetBool("DevTools.PlayerPreferencesEditor.WatchingForChanges", false);
+            monitoring = EditorPrefs.GetBool("BGTools.PlayerPrefsEditor.WatchingForChanges", false);
             if(monitoring)
                 entryAccessor.StartMonitoring();
 
@@ -103,7 +103,7 @@ namespace BgTools.PlayerPreferencesEditor
                 Repaint();
             }
 
-            bool currValue = EditorPrefs.GetBool("DevTools.PlayerPreferencesEditor.WatchingForChanges", false);
+            bool currValue = EditorPrefs.GetBool("BGTools.PlayerPrefsEditor.WatchingForChanges", false);
 
             if (monitoring != currValue)
             {

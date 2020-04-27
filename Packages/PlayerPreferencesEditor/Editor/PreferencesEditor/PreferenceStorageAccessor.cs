@@ -12,7 +12,7 @@ using System.Xml;
 using System.Xml.Linq;
 #endif
 
-namespace BgTools.PlayerPreferencesEditor
+namespace BgTools.PlayerPrefsEditor
 {
     public abstract class PreferanceStorageAccessor
     {

@@ -18,7 +18,7 @@ namespace BgTools.Settings
 
         private void OnEnable()
         {
-            watchingForChanges = EditorPrefs.GetBool("DevTools.PlayerPreferencesEditor.WatchingForChanges", false);
+            watchingForChanges = EditorPrefs.GetBool("BGTools.PlayerPrefsEditor.WatchingForChanges", false);
         }
 
         public override void OnInspectorGUI()
@@ -27,7 +27,7 @@ namespace BgTools.Settings
 
             EditorGUI.BeginChangeCheck();
 
-            GUILayout.Label("Player Preferences Editor", EditorStyles.boldLabel);
+            GUILayout.Label("PlayerPrefs Editor", EditorStyles.boldLabel);
             GUILayout.BeginHorizontal();
             GUILayout.Label(new GUIContent("Monitor PlayerPref changes", "Detect PlayerPref changes in the system and refresh the view automaticlly"));
             watchingForChanges = GUILayout.Toggle(watchingForChanges, string.Empty);
@@ -37,11 +37,11 @@ namespace BgTools.Settings
             {
                 if (watchingForChanges)
                 {
-                    EditorPrefs.SetBool("DevTools.PlayerPreferencesEditor.WatchingForChanges", watchingForChanges);
+                    EditorPrefs.SetBool("BGTools.PlayerPrefsEditor.WatchingForChanges", watchingForChanges);
                 }
                 else
                 {
-                    EditorPrefs.DeleteKey("DevTools.PlayerPreferencesEditor.WatchingForChanges");
+                    EditorPrefs.DeleteKey("BGTools.PlayerPrefsEditor.WatchingForChanges");
                 }
             }
 

@@ -13,7 +13,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
 
-namespace BgTools.PlayerPreferencesEditor
+namespace BgTools.PlayerPrefsEditor
 {
     public class RegistryMonitor : IDisposable
     {
