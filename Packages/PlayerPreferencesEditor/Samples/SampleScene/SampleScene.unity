@@ -1366,7 +1366,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Player Preferences Editor
+  m_Text: PlayerPrefs Editor
 --- !u!222 &899057311
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1538,12 +1538,12 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Thanks for using
 
-    <b>Player Preferance Editor</b>
+    <b>PlayerPrefs Editor</b>
 
     from <b>BG Tools</b>.
 
 
-    You can open the Window Tools/BG Tools/Player Preferences Editor
+    You can open the Window Tools/BG Tools/PlayerPrefs Editor
 
 
     Press the buttons to change PlayerPrefs and see how the tool lists it.'
