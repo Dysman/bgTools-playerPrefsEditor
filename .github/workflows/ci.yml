@@ -17,7 +17,7 @@ jobs:
         git subtree split -P "$PKG_ROOT" -b upm
         git checkout upm
       env:
-        PKG_ROOT: Packages/PlayerPreferencesEditor/
+        PKG_ROOT: Packages/PlayerPrefsEditor/
     - name: rename samples
       run: |
         if [[ -d "Samples" ]]; then
