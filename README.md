@@ -12,9 +12,9 @@ Tool extension for the Unity Editor that enables easy access to the player prefe
 * Intuitive visual editor
 * Works with standard Unity PlayerPrefs
 * Monitors changes from code
-* Supports all editors (windows, linux, mac)
+* Supports all editors (Windows, Linux, MacOS)
 * Lightweight dockable for full integration in your workflow
-* Supports both skins (personal, professional)
+* Supports both skins (Personal, Professional)
 
 ## Requirements
 
