@@ -65,7 +65,7 @@ namespace BgTools.PlayerPrefsEditor
         {
 #if UNITY_EDITOR_WIN
             pathToPrefs = @"SOFTWARE\Unity\UnityEditor\" + PlayerSettings.companyName + @"\" + PlayerSettings.productName;
-            platformPathPrefix = @"<CurrendUser>";
+            platformPathPrefix = @"<CurrentUser>";
             entryAccessor = new WindowsPrefStorage(pathToPrefs);
 #elif UNITY_EDITOR_OSX
             pathToPrefs = @"Library/Preferences/unity." + PlayerSettings.companyName + "." + PlayerSettings.productName + ".plist";
