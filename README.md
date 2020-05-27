@@ -25,6 +25,9 @@ Editor Version: Windows, MacOS, Linux
 
 The plugin provides *manual* and *UPM* installation.
 
+
+Additionally it's available on the [Unity Asset Store](http://u3d.as/1RLa).
+
 ### Manual
 Place the PlayerPrefsEditor folder somewhere in your project. It's not relevant where it's located, the plugin will find all of its files by itself.
 
