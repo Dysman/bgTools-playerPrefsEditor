@@ -32,6 +32,8 @@ namespace BgTools.PlayerPrefsEditor
         private PreferenceEntryHolder prefEntryHolder;
 
         private Vector2 scrollPos;
+        private float relSpliterPos;
+        private bool moveSplitterPos = false;
 
         private PreferanceStorageAccessor entryAccessor;
 
@@ -153,6 +155,8 @@ namespace BgTools.PlayerPrefsEditor
             userDefList = new ReorderableList(serializedObject, serializedObject.FindProperty("userDefList"), false, true, true, true);
             unityDefList = new ReorderableList(serializedObject, serializedObject.FindProperty("unityDefList"), false, true, false, false);
 
+            relSpliterPos = EditorPrefs.GetFloat("BGTools.PlayerPrefsEditor.RelativeSpliterPosition", 100 / position.width);
+
             userDefList.drawHeaderCallback = (Rect rect) =>
             {
                 Color defaultColor = GUI.contentColor;
@@ -164,6 +168,28 @@ namespace BgTools.PlayerPrefsEditor
 
                 GUI.contentColor = defaultColor;
             };
+            userDefList.drawElementBackgroundCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            {
+                Rect spliterRect = new Rect(rect.x + relSpliterPos * rect.width, rect.y, 2, rect.height);
+                EditorGUIUtility.AddCursorRect(spliterRect, MouseCursor.ResizeHorizontal);
+                if (Event.current.type == EventType.MouseDown && spliterRect.Contains(Event.current.mousePosition))
+                {
+                    moveSplitterPos = true;
+                }
+                if(moveSplitterPos)
+                {
+                    if (Event.current.mousePosition.x > 100 && Event.current.mousePosition.x < rect.width - 120)
+                    {
+                        relSpliterPos = Event.current.mousePosition.x / rect.width;
+                        Repaint();
+                    }
+                }
+                if (Event.current.type == EventType.MouseUp)
+                {
+                    moveSplitterPos = false;
+                    EditorPrefs.SetFloat("BGTools.PlayerPrefsEditor.RelativeSpliterPosition", relSpliterPos);
+                }
+            };
             userDefList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
             {
                 var element = userDefList.serializedProperty.GetArrayElementAtIndex(index);
@@ -172,23 +198,25 @@ namespace BgTools.PlayerPrefsEditor
                 SerializedProperty strValue = element.FindPropertyRelative("m_strValue");
                 SerializedProperty intValue = element.FindPropertyRelative("m_intValue");
                 SerializedProperty floatValue = element.FindPropertyRelative("m_floatValue");
+                float spliterPos = relSpliterPos * rect.width;
+
                 rect.y += 2;
 
                 EditorGUI.BeginChangeCheck();
-                EditorGUI.LabelField(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight), new GUIContent(key.stringValue, key.stringValue));
+                EditorGUI.LabelField(new Rect(rect.x, rect.y, spliterPos - 1, EditorGUIUtility.singleLineHeight), new GUIContent(key.stringValue, key.stringValue));
                 GUI.enabled = false;
-                EditorGUI.PropertyField(new Rect(rect.x + 100, rect.y, 60, EditorGUIUtility.singleLineHeight), type, GUIContent.none);
+                EditorGUI.PropertyField(new Rect(rect.x + spliterPos + 1, rect.y, 60, EditorGUIUtility.singleLineHeight), type, GUIContent.none);
                 GUI.enabled = !showLoadingIndicatorOverlay;
                 switch ((PreferenceEntry.PrefTypes)type.enumValueIndex)
                 {
                     case PreferenceEntry.PrefTypes.Float:
-                        EditorGUI.DelayedFloatField(new Rect(rect.x + 161, rect.y, rect.width - 160, EditorGUIUtility.singleLineHeight), floatValue, GUIContent.none);
+                        EditorGUI.DelayedFloatField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), floatValue, GUIContent.none);
                         break;
                     case PreferenceEntry.PrefTypes.Int:
-                        EditorGUI.DelayedIntField(new Rect(rect.x + 161, rect.y, rect.width - 160, EditorGUIUtility.singleLineHeight), intValue, GUIContent.none);
+                        EditorGUI.DelayedIntField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), intValue, GUIContent.none);
                         break;
                     case PreferenceEntry.PrefTypes.String:
-                        EditorGUI.DelayedTextField(new Rect(rect.x + 161, rect.y, rect.width - 160, EditorGUIUtility.singleLineHeight), strValue, GUIContent.none);
+                        EditorGUI.DelayedTextField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), strValue, GUIContent.none);
                         break;
                 }
                 if (EditorGUI.EndChangeCheck())
