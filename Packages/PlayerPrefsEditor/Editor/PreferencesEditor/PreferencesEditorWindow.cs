@@ -80,7 +80,7 @@ namespace BgTools.PlayerPrefsEditor
 #endif
             entryAccessor.PrefEntryChangedDelegate = () => { updateView = true; };
 
-            monitoring = EditorPrefs.GetBool("BGTools.PlayerPrefsEditor.WatchingForChanges", false);
+            monitoring = EditorPrefs.GetBool("BGTools.PlayerPrefsEditor.WatchingForChanges", true);
             if(monitoring)
                 entryAccessor.StartMonitoring();
 
