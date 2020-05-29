@@ -611,13 +611,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'The smal eye icon on the top right indicates the monitoring state.
-
-
-    You can change the behaviour in the setting that you can open from the menu.
-
-
-    Tools/BG Tools/Settings'
+  m_Text: "The small eye icon on the top right indicates the monitoring state.\r\n\r\nYou
+    can toggle the behavior of 'monitoring' with this button.\r\n"
 --- !u!222 &317393210
 CanvasRenderer:
   m_ObjectHideFlags: 0
