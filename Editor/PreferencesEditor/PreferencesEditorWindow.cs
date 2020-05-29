@@ -168,28 +168,7 @@ namespace BgTools.PlayerPrefsEditor
 
                 GUI.contentColor = defaultColor;
             };
-            userDefList.drawElementBackgroundCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
-            {
-                Rect spliterRect = new Rect(rect.x + relSpliterPos * rect.width, rect.y, 2, rect.height);
-                EditorGUIUtility.AddCursorRect(spliterRect, MouseCursor.ResizeHorizontal);
-                if (Event.current.type == EventType.MouseDown && spliterRect.Contains(Event.current.mousePosition))
-                {
-                    moveSplitterPos = true;
-                }
-                if(moveSplitterPos)
-                {
-                    if (Event.current.mousePosition.x > 100 && Event.current.mousePosition.x < rect.width - 120)
-                    {
-                        relSpliterPos = Event.current.mousePosition.x / rect.width;
-                        Repaint();
-                    }
-                }
-                if (Event.current.type == EventType.MouseUp)
-                {
-                    moveSplitterPos = false;
-                    EditorPrefs.SetFloat("BGTools.PlayerPrefsEditor.RelativeSpliterPosition", relSpliterPos);
-                }
-            };
+            userDefList.drawElementBackgroundCallback = OnDrawElementBackgroundCallback;
             userDefList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
             {
                 var element = userDefList.serializedProperty.GetArrayElementAtIndex(index);
@@ -256,7 +235,6 @@ namespace BgTools.PlayerPrefsEditor
                     GUIUtility.ExitGUI();
                 }
             };
-
             userDefList.onAddDropdownCallback = (Rect buttonRect, ReorderableList l) =>
             {
                 var menu = new GenericMenu();
@@ -295,6 +273,7 @@ namespace BgTools.PlayerPrefsEditor
                 menu.ShowAsContext();
             };
 
+            unityDefList.drawElementBackgroundCallback = OnDrawElementBackgroundCallback;
             unityDefList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
             {
                 var element = unityDefList.serializedProperty.GetArrayElementAtIndex(index);
@@ -303,22 +282,24 @@ namespace BgTools.PlayerPrefsEditor
                 SerializedProperty strValue = element.FindPropertyRelative("m_strValue");
                 SerializedProperty intValue = element.FindPropertyRelative("m_intValue");
                 SerializedProperty floatValue = element.FindPropertyRelative("m_floatValue");
+                float spliterPos = relSpliterPos * rect.width;
+
                 rect.y += 2;
 
                 GUI.enabled = false;
-                EditorGUI.LabelField(new Rect(rect.x, rect.y, 100, EditorGUIUtility.singleLineHeight), new GUIContent(key.stringValue, key.stringValue));
-                EditorGUI.PropertyField(new Rect(rect.x + 100, rect.y, 60, EditorGUIUtility.singleLineHeight), type, GUIContent.none);
+                EditorGUI.LabelField(new Rect(rect.x, rect.y, spliterPos - 1, EditorGUIUtility.singleLineHeight), new GUIContent(key.stringValue, key.stringValue));
+                EditorGUI.PropertyField(new Rect(rect.x + spliterPos + 1, rect.y, 60, EditorGUIUtility.singleLineHeight), type, GUIContent.none);
 
                 switch ((PreferenceEntry.PrefTypes)type.enumValueIndex)
                 {
                     case PreferenceEntry.PrefTypes.Float:
-                        EditorGUI.DelayedFloatField(new Rect(rect.x + 161, rect.y, rect.width - 160, EditorGUIUtility.singleLineHeight), floatValue, GUIContent.none);
+                        EditorGUI.DelayedFloatField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), floatValue, GUIContent.none);
                         break;
                     case PreferenceEntry.PrefTypes.Int:
-                        EditorGUI.DelayedIntField(new Rect(rect.x + 161, rect.y, rect.width - 160, EditorGUIUtility.singleLineHeight), intValue, GUIContent.none);
+                        EditorGUI.DelayedIntField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), intValue, GUIContent.none);
                         break;
                     case PreferenceEntry.PrefTypes.String:
-                        EditorGUI.DelayedTextField(new Rect(rect.x + 161, rect.y, rect.width - 160, EditorGUIUtility.singleLineHeight), strValue, GUIContent.none);
+                        EditorGUI.DelayedTextField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), strValue, GUIContent.none);
                         break;
                 }
                 GUI.enabled = !showLoadingIndicatorOverlay;
@@ -327,6 +308,29 @@ namespace BgTools.PlayerPrefsEditor
             {
                 EditorGUI.LabelField(rect, "Unity defined");
             };
+        }
+
+        private void OnDrawElementBackgroundCallback(Rect rect, int index, bool isActive, bool isFocused)
+        {
+            Rect spliterRect = new Rect(rect.x + relSpliterPos * rect.width, rect.y, 2, rect.height);
+            EditorGUIUtility.AddCursorRect(spliterRect, MouseCursor.ResizeHorizontal);
+            if (Event.current.type == EventType.MouseDown && spliterRect.Contains(Event.current.mousePosition))
+            {
+                moveSplitterPos = true;
+            }
+            if(moveSplitterPos)
+            {
+                if (Event.current.mousePosition.x > 100 && Event.current.mousePosition.x<rect.width - 120)
+                {
+                    relSpliterPos = Event.current.mousePosition.x / rect.width;
+                    Repaint();
+}
+            }
+            if (Event.current.type == EventType.MouseUp)
+            {
+                moveSplitterPos = false;
+                EditorPrefs.SetFloat("BGTools.PlayerPrefsEditor.RelativeSpliterPosition", relSpliterPos);
+            }
         }
 
         void OnGUI()
