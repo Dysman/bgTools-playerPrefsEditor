@@ -20,14 +20,14 @@ Tool extension for the Unity Editor that enables easy access to the player prefe
 
 The PlayerPrefs Editor is located in the top menu at Tools/BG Tools/PlayerPrefs Editor. It's a standard dockable window, so place it wherever it helps to be productive.
 
-![PlayerPrefs editor window layout](file://bgtools_ppe_ui.png){ width=100% style="max-width:800px" }
+![PlayerPrefs editor window layout](./bgtools_ppe_manual_layout.png){ width=100% style="max-width:800px" }
 
 The PlayerPrefs Editor window displays:
 * (A) Filter field
-* (B) Refresh data
-* (C) Delete all data
-* (D) Operating system and path to PlayerPrefs data
-* (E) Indicator for 'System changes monitoring' state
+* (B) Toggle 'System changes monitoring' behavior
+* (C) Refresh data
+* (D) Delete all data
+* (E) Operating system and path to PlayerPrefs data
 * (F) PlayerPrefs data list (Key, Type, Value)
 * (G) Add/Remove a PlayerPrefs entry
 * (H) Toggle visibility of system defined PlayerPrefs
@@ -50,7 +50,7 @@ To change a value of a existing entry do this directly in the value field in the
 
 ### Monitoring system changes
 
-The plugin can monitor changes at runtime automatically and keep the view up-to-date. This detection is active by default, but it can be turned off in the plugin settings. The settings can be found in the top menu Tools/BG Tools/Settings.
+The plugin can monitor changes at runtime automatically and keep the view up-to-date. This detection is active by default, but it can be turned off over the (B) button in the toolbar.
 
 ## Samples
 

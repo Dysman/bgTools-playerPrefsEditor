@@ -44,4 +44,7 @@ See official Unity documentation for more informations: [UI](https://docs.unity3
 ## Usage
 
 The entry to open the _PlayerPrefs Editor_ is located in the top menu at Tools/BG Tools/PlayerPrefs Editor. It's a standard dockable window, so place it wherever it helps to be productive.
-Into the settings it's possible to activate the 'monitoring of player preference changes'. This will detect changes and refresh the entries automatically to keep the view up-to-date.
+A more detailed manual can be fund in following locations:
+* GitHub (Manual)- [Manual page](Packages/PlayerPrefsEditor/Documentation~/PlayerPrefsEditor.md)
+* GitHub (UPM) - Press the _Documentation_ link on the UPM description.
+* Unity Asset Store Package - [MANUAL.html](MANUAL.html)
