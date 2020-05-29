@@ -312,6 +312,11 @@ namespace BgTools.PlayerPrefsEditor
 
         private void OnDrawElementBackgroundCallback(Rect rect, int index, bool isActive, bool isFocused)
         {
+            if (Event.current.type == EventType.Repaint)
+            {
+                ReorderableList.defaultBehaviours.elementBackground.Draw(rect, false, isActive, isActive, isFocused);
+            }
+
             Rect spliterRect = new Rect(rect.x + relSpliterPos * rect.width, rect.y, 2, rect.height);
             EditorGUIUtility.AddCursorRect(spliterRect, MouseCursor.ResizeHorizontal);
             if (Event.current.type == EventType.MouseDown && spliterRect.Contains(Event.current.mousePosition))
@@ -324,7 +329,7 @@ namespace BgTools.PlayerPrefsEditor
                 {
                     relSpliterPos = Event.current.mousePosition.x / rect.width;
                     Repaint();
-}
+                }
             }
             if (Event.current.type == EventType.MouseUp)
             {
