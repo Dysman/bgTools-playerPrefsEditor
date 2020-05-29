@@ -80,7 +80,7 @@ namespace BgTools.PlayerPrefsEditor
 #endif
             entryAccessor.PrefEntryChangedDelegate = () => { updateView = true; };
 
-            monitoring = EditorPrefs.GetBool("BGTools.PlayerPrefsEditor.WatchingForChanges", false);
+            monitoring = EditorPrefs.GetBool("BGTools.PlayerPrefsEditor.WatchingForChanges", true);
             if(monitoring)
                 entryAccessor.StartMonitoring();
 
@@ -102,20 +102,6 @@ namespace BgTools.PlayerPrefsEditor
             {
                 loadingSpinnerFrame = (int)Mathf.Repeat(Time.realtimeSinceStartup * 10, 11.99f);
                 PrepareData();
-                Repaint();
-            }
-
-            bool currValue = EditorPrefs.GetBool("BGTools.PlayerPrefsEditor.WatchingForChanges", false);
-
-            if (monitoring != currValue)
-            {
-                monitoring = currValue;
-
-                if (monitoring)
-                    entryAccessor.StartMonitoring();
-                else
-                    entryAccessor.StopMonitoring();
-
                 Repaint();
             }
 
@@ -159,14 +145,7 @@ namespace BgTools.PlayerPrefsEditor
 
             userDefList.drawHeaderCallback = (Rect rect) =>
             {
-                Color defaultColor = GUI.contentColor;
-
                 EditorGUI.LabelField(rect, "User defined");
-                GUI.contentColor = (EditorGUIUtility.isProSkin) ? Styles.Colors.LightGray : Styles.Colors.DarkGray;
-                GUIContent watcherContent = (entryAccessor.IsMonitoring()) ? new GUIContent(ImageManager.Watching, "Watch changes") : new GUIContent(ImageManager.NotWatching, "Not watching changes");
-                EditorGUI.LabelField(new Rect(rect.width - EditorGUIUtility.singleLineHeight, rect.y, EditorGUIUtility.singleLineHeight, EditorGUIUtility.singleLineHeight), watcherContent);
-
-                GUI.contentColor = defaultColor;
             };
             userDefList.drawElementBackgroundCallback = OnDrawElementBackgroundCallback;
             userDefList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
@@ -365,6 +344,20 @@ namespace BgTools.PlayerPrefsEditor
                 GUILayout.FlexibleSpace();
 
                 EditorGUIUtility.SetIconSize(new Vector2(14.0f, 14.0f));
+                GUIContent watcherContent = (entryAccessor.IsMonitoring()) ? new GUIContent(ImageManager.Watching, "Watch changes") : new GUIContent(ImageManager.NotWatching, "Not watching changes");
+                if (GUILayout.Button(watcherContent, EditorStyles.toolbarButton))
+                {
+                    monitoring = !monitoring;
+
+                    EditorPrefs.SetBool("BGTools.PlayerPrefsEditor.WatchingForChanges", monitoring);
+
+                    if (monitoring)
+                        entryAccessor.StartMonitoring();
+                    else
+                        entryAccessor.StopMonitoring();
+
+                    Repaint();
+                }
                 if (GUILayout.Button(new GUIContent(ImageManager.Refresh, "Refresh"), EditorStyles.toolbarButton))
                 {
                     PlayerPrefs.Save();
