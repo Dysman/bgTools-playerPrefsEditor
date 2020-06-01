@@ -6,9 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Support new UIElements system [WIP]
-- Switch to unity internal icons [WIP]
+
+## [1.0.1] - 2020-06-01
 - Resizable column width for table layout
 - Multiple UX improvements
+- Add manual
 
 ## [1.0.0] - 2020-05-26
 This is the first release of PlayerPrefs Editor.
