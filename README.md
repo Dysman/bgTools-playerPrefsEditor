@@ -1,7 +1,13 @@
 # PlayerPrefs Editor for Unity 3D
 
+[![Minimal unity editor version](https://img.shields.io/badge/UnityEditor-2017.4%20or%20later-blue.svg)](https://unity3d.com/de/get-unity/download/archive)
+[![CI](https://github.com/Dysman/bgTools-playerPrefsEditor/workflows/CI/badge.svg)](https://github.com/Dysman/bgTools-playerPrefsEditor/actions)&nbsp;&nbsp;
+[![Release](https://img.shields.io/github/v/release/Dysman/bgTools-playerPrefsEditor?include_prereleases&label=Release)](https://github.com/Dysman/bgTools-playerPrefsEditor/releases)
+[![GitHub package.json version (branch)](https://img.shields.io/github/package-json/v/dysman/bgTools-playerPrefsEditor/upm?label=GitURL-UPM)](https://github.com/Dysman/bgTools-playerPrefsEditor/tree/upm)
+[![openupm](https://img.shields.io/npm/v/com.bgtools.playerprefseditor?label=OpenUPM&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.bgtools.playerprefseditor)
+[![AssetStore](https://img.shields.io/badge/dynamic/xml?url=http://u3d.as/1RLa&label=UnityAssetStore&query=//*[contains(@class,%20%27product-version%27)]/div[2]&prefix=v)](http://u3d.as/1RLa)
+
 [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/@dysman)
-[![openupm](https://img.shields.io/npm/v/com.bgtools.playerprefseditor?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.bgtools.playerprefseditor/)
 
 Tool extension for the Unity Editor that enables easy access to the player preferences over a simple UI. Allows to view, add, remove and modify entries on the development machine.
 
