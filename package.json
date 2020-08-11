@@ -5,9 +5,9 @@
   "unity": "2017.4",
   "description": "Tool extension for the Unity Editor that enables easy access to the player preferences over a simple UI. Allows to view, add, remove and modify entries on the development machine.",
   "author": {
-    "name": "Benjamin Granzow",
-    "email": "kontakt@bgranzow.de",
-    "url": "https://github.com/Dysman/bgTools-playerPrefsEditor"
+    "name": "BG Tools",
+    "email": "support@bgtools.de",
+    "url": "https://www.bgtools.de/ppe/"
   },
   "keywords": [
     "Tool",
