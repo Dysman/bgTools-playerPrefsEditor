@@ -26,5 +26,6 @@
       "description": "Simple UI that manipulates PlayerPrefs entries on runtime",
       "path": "Samples~/SampleScene"
     }
-  ]
+  ],
+  "type": "tool"
 }
