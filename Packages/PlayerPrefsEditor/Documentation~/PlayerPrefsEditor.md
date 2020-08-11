@@ -20,7 +20,7 @@ Tool extension for the Unity Editor that enables easy access to the player prefe
 
 The PlayerPrefs Editor is located in the top menu at Tools/BG Tools/PlayerPrefs Editor. It's a standard dockable window, so place it wherever it helps to be productive.
 
-![PlayerPrefs editor window layout](./bgtools_ppe_manual_layout.png){ width=100% style="max-width:800px" }
+![PlayerPrefs editor window layout](./Images/bgtools_ppe_manual_layout.png){ width=100% style="max-width:800px" }
 
 The PlayerPrefs Editor window displays:
 * (A) Filter field
