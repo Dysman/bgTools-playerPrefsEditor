@@ -328,7 +328,10 @@ namespace BgTools.PlayerPrefsEditor
                 }
 
                 Color defaultColor = GUI.contentColor;
-                GUI.contentColor = (EditorGUIUtility.isProSkin) ? Styles.Colors.LightGray : Styles.Colors.DarkGray;
+                if (!EditorGUIUtility.isProSkin)
+                {
+                    GUI.contentColor = Styles.Colors.DarkGray;
+                }
 
                 GUILayout.BeginVertical();
 
