@@ -4,7 +4,7 @@ Tool extension for the Unity Editor that enables easy access to the player prefe
 
 ## Support
 
-[GitHub](https://github.com/Dysman/bgTools-playerPrefsEditor) | [Website](https://bgtools.de/ppe) | [Mail](mailto:support@bgtools.de)
+[GitHub](https://github.com/Dysman/bgTools-playerPrefsEditor) | [Website](https://www.bgtools.de/post/playerprefseditor/) | [Mail](mailto:support@bgtools.de) | [Discord](https://discord.gg/8rcPZrD)
 
 ## Features
 
