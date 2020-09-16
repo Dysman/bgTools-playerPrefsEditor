@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Planned]
 - Support new UIElements system
 
+## [Unreleased]
+- Fix text color on professional skin
+
 ## [1.0.2] - 2020-08-11
 - Switch package author to 'BG Tools'
 - Fix UPM documentation image path
