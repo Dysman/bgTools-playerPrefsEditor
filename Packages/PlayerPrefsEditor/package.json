@@ -1,7 +1,7 @@
 {
   "name": "com.bgtools.playerprefseditor",
   "displayName": "PlayerPrefs Editor",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "unity": "2017.4",
   "description": "Tool extension for the Unity Editor that enables easy access to the player preferences over a simple UI. Allows to view, add, remove and modify entries on the development machine.",
   "author": {
