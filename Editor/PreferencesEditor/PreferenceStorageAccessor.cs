@@ -89,8 +89,8 @@ namespace BgTools.PlayerPrefsEditor
                 if (rootKey != null)
                 {
                     cachedData = rootKey.GetValueNames();
+                    rootKey.Close();
                 }
-                rootKey.Close();
             }
 
             // Clean <key>_h3320113488 nameing
