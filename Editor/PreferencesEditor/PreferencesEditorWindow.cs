@@ -50,6 +50,8 @@ namespace BgTools.PlayerPrefsEditor
             new TextValidator(TextValidator.ErrorType.Error, @"Invalid character detected. Only letters, numbers, space and _!§$%&/()=?*+~#-]+$ are allowed", @"(^$)|(^[a-zA-Z0-9 _!§$%&/()=?*+~#-]+$)"),
             new TextValidator(TextValidator.ErrorType.Warning, @"The given key already exist. The existing entry would be overwritten!", (key) => { return !PlayerPrefs.HasKey(key); })
         };
+        
+        private readonly char[] invalidFilenameChars = { '"', '\\', '*', '/', ':', '<', '>', '?', '|' };
 
         [MenuItem("Tools/BG Tools/PlayerPrefs Editor", false, 1)]
         static void ShowWindow()
@@ -70,12 +72,12 @@ namespace BgTools.PlayerPrefsEditor
             platformPathPrefix = @"<CurrentUser>";
             entryAccessor = new WindowsPrefStorage(pathToPrefs);
 #elif UNITY_EDITOR_OSX
-            pathToPrefs = @"Library/Preferences/unity." + PlayerSettings.companyName + "." + PlayerSettings.productName + ".plist";
+            pathToPrefs = @"Library/Preferences/unity." + MakeValidFileName(PlayerSettings.companyName) + "." + MakeValidFileName(PlayerSettings.productName) + ".plist";
             entryAccessor = new MacPrefStorage(pathToPrefs);
             entryAccessor.StartLoadingDelegate = () => { showLoadingIndicatorOverlay = true; };
             entryAccessor.StopLoadingDelegate = () => { showLoadingIndicatorOverlay = false; };
 #elif UNITY_EDITOR_LINUX
-            pathToPrefs = @".config/unity3d/" + PlayerSettings.companyName + "/" + PlayerSettings.productName + "/prefs";
+            pathToPrefs = @".config/unity3d/" + MakeValidFileName(PlayerSettings.companyName) + "/" + MakeValidFileName(PlayerSettings.productName) + "/prefs";
             entryAccessor = new LinuxPrefStorage(pathToPrefs);
 #endif
             entryAccessor.PrefEntryChangedDelegate = () => { updateView = true; };
@@ -495,6 +497,28 @@ namespace BgTools.PlayerPrefsEditor
 
             unityDef = (groups.ContainsKey(true)) ? groups[true].ToArray() : new string[0];
             userDef = (groups.ContainsKey(false)) ? groups[false].ToArray() : new string[0];
+        }
+
+        private string MakeValidFileName(string unsafeFileName)
+        {
+            string normalizedFileName = unsafeFileName.Trim().Normalize(System.Text.NormalizationForm.FormD);
+            System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder();
+
+            // We need to use a TextElementEmumerator in order to support UTF16 characters that may take up more than one char(case 1169358)
+            System.Globalization.TextElementEnumerator charEnum = System.Globalization.StringInfo.GetTextElementEnumerator(normalizedFileName);
+            while (charEnum.MoveNext())
+            {
+                var c = charEnum.GetTextElement();
+                if (c.Length == 1 && invalidFilenameChars.Contains(c[0]))
+                { 
+                    stringBuilder.Append('_');
+                    continue;
+                } 
+                var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c, 0);
+                if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
+                    stringBuilder.Append(c);
+            }
+            return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC);
         }
     }
 }
