@@ -50,9 +50,14 @@ namespace BgTools.PlayerPrefsEditor
             new TextValidator(TextValidator.ErrorType.Error, @"Invalid character detected. Only letters, numbers, space and _!§$%&/()=?*+~#-]+$ are allowed", @"(^$)|(^[a-zA-Z0-9 _!§$%&/()=?*+~#-]+$)"),
             new TextValidator(TextValidator.ErrorType.Warning, @"The given key already exist. The existing entry would be overwritten!", (key) => { return !PlayerPrefs.HasKey(key); })
         };
-        
-        private readonly char[] invalidFilenameChars = { '"', '\\', '*', '/', ':', '<', '>', '?', '|' };
 
+#if UNITY_EDITOR_WIN
+        private readonly char[] invalidFilenameChars;
+#elif UNITY_EDITOR_LINUX
+        private readonly char[] invalidFilenameChars = { '"', '\\', '*', '/', ':', '<', '>', '?', '|' };
+#elif UNITY_EDITOR_OSX
+        private readonly char[] invalidFilenameChars = { '$', '%', '&', '\\', '/', ':', '<', '>', '|', '~' };
+#endif
         [MenuItem("Tools/BG Tools/PlayerPrefs Editor", false, 1)]
         static void ShowWindow()
         {
@@ -510,7 +515,7 @@ namespace BgTools.PlayerPrefsEditor
             {
                 var c = charEnum.GetTextElement();
                 if (c.Length == 1 && invalidFilenameChars.Contains(c[0]))
-                { 
+                {
                     stringBuilder.Append('_');
                     continue;
                 } 
