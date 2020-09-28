@@ -206,13 +206,14 @@ namespace BgTools.PlayerPrefsEditor
 
             if (File.Exists(prefPath))
             {
-                var cmdStr = string.Format(@"-c ""plutil -p '{0}'""", prefPath);
+                string fixedPrefsPath = prefPath.Replace("\"", "\\\"").Replace("'", "\\'").Replace("`", "\\`");
+                var cmdStr = string.Format(@"-p '{0}'", fixedPrefsPath);
 
                 var process = new System.Diagnostics.Process();
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.FileName = "sh";
+                process.StartInfo.FileName = "plutil";
                 process.StartInfo.Arguments = cmdStr;
                 process.Start();
 
