@@ -9,14 +9,19 @@ using System.Collections.Generic;
 using BgTools.Utils;
 using BgTools.Dialogs;
 
+#if (UNITY_EDITOR_LINUX || UNITY_EDITOR_OSX)
+using System.Text;
+using System.Globalization;
+#endif
+
 namespace BgTools.PlayerPrefsEditor
 {
     public class PreferencesEditorWindow : EditorWindow
     {
-        #region ErrorValues
+#region ErrorValues
         private readonly int ERROR_VALUE_INT = int.MinValue;
         private readonly string ERROR_VALUE_STR = "<bgTool_error_24072017>";
-        #endregion //ErrorValues
+#endregion //ErrorValues
 
         private static string pathToPrefs = String.Empty;
         private static string platformPathPrefix = @"~";
@@ -51,9 +56,7 @@ namespace BgTools.PlayerPrefsEditor
             new TextValidator(TextValidator.ErrorType.Warning, @"The given key already exist. The existing entry would be overwritten!", (key) => { return !PlayerPrefs.HasKey(key); })
         };
 
-#if UNITY_EDITOR_WIN
-        private readonly char[] invalidFilenameChars;
-#elif UNITY_EDITOR_LINUX
+#if UNITY_EDITOR_LINUX
         private readonly char[] invalidFilenameChars = { '"', '\\', '*', '/', ':', '<', '>', '?', '|' };
 #elif UNITY_EDITOR_OSX
         private readonly char[] invalidFilenameChars = { '$', '%', '&', '\\', '/', ':', '<', '>', '|', '~' };
@@ -504,26 +507,28 @@ namespace BgTools.PlayerPrefsEditor
             userDef = (groups.ContainsKey(false)) ? groups[false].ToArray() : new string[0];
         }
 
+#if (UNITY_EDITOR_LINUX || UNITY_EDITOR_OSX)
         private string MakeValidFileName(string unsafeFileName)
         {
-            string normalizedFileName = unsafeFileName.Trim().Normalize(System.Text.NormalizationForm.FormD);
-            System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder();
+            string normalizedFileName = unsafeFileName.Trim().Normalize(NormalizationForm.FormD);
+            StringBuilder stringBuilder = new StringBuilder();
 
             // We need to use a TextElementEmumerator in order to support UTF16 characters that may take up more than one char(case 1169358)
-            System.Globalization.TextElementEnumerator charEnum = System.Globalization.StringInfo.GetTextElementEnumerator(normalizedFileName);
+            TextElementEnumerator charEnum = StringInfo.GetTextElementEnumerator(normalizedFileName);
             while (charEnum.MoveNext())
             {
-                var c = charEnum.GetTextElement();
+                string c = charEnum.GetTextElement();
                 if (c.Length == 1 && invalidFilenameChars.Contains(c[0]))
                 {
                     stringBuilder.Append('_');
                     continue;
-                } 
-                var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c, 0);
-                if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
+                }
+                UnicodeCategory unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c, 0);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
                     stringBuilder.Append(c);
             }
-            return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC);
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
+#endif
     }
 }
