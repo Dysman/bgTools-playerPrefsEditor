@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Planned]
 - Support new UIElements system
 
+## [Unreleased]
+- Add handling for special characters in product/company name
+- Improvement of plist read call on MAC
+
 ## [1.0.3] - 2020-09-20
 - Fix text color on professional skin
 
