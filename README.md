@@ -65,4 +65,4 @@ The entry to open the _PlayerPrefs Editor_ is located in the top menu at Tools/B
 A more detailed manual can be fund in following locations:
 * GitHub (Manual)- [Manual page](Packages/PlayerPrefsEditor/Documentation~/PlayerPrefsEditor.md)
 * GitHub (UPM) - Press the _Documentation_ link on the UPM description.
-* Unity Asset Store Package - [MANUAL.html](MANUAL.html)
+* Unity Asset Store Package - [MANUAL.html](Documentation/MANUAL.html)
