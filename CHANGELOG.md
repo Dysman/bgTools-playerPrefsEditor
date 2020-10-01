@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Planned]
 - Support new UIElements system
 
-## [Unreleased]
+## [1.0.4] - 2020-09-20
 - Add handling for special characters in product/company name
 - Improvement of plist read call on MAC
 
@@ -24,4 +24,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add manual
 
 ## [1.0.0] - 2020-05-26
-This is the first release of PlayerPrefs Editor.
+This is the first release of PlayerPrefs Editor
