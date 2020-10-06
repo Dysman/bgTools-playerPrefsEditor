@@ -212,7 +212,7 @@ namespace BgTools.PlayerPrefsEditor
                 userDefList.ReleaseKeyboardFocus();
                 unityDefList.ReleaseKeyboardFocus();
 
-                if (EditorUtility.DisplayDialog("Warning!", "Are you sure you want to delete this entry from PlayerPrefs? ", "Yes", "No"))
+                if (EditorUtility.DisplayDialog("Warning!", "Are you sure you want to delete this entry from PlayerPrefs: " + l.serializedProperty.GetArrayElementAtIndex(l.index).FindPropertyRelative("m_key").stringValue + " ? ", "Yes", "No"))
                 {
                     entryAccessor.IgnoreNextChange();
 
