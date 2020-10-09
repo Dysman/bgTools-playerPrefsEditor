@@ -212,11 +212,12 @@ namespace BgTools.PlayerPrefsEditor
                 userDefList.ReleaseKeyboardFocus();
                 unityDefList.ReleaseKeyboardFocus();
 
-                if (EditorUtility.DisplayDialog("Warning!", "Are you sure you want to delete this entry from PlayerPrefs? ", "Yes", "No"))
+                string prefKey = l.serializedProperty.GetArrayElementAtIndex(l.index).FindPropertyRelative("m_key").stringValue;
+                if (EditorUtility.DisplayDialog("Warning!", $"Are you sure you want to delete this entry from PlayerPrefs?\n\nEntry: {prefKey}", "Yes", "No"))
                 {
                     entryAccessor.IgnoreNextChange();
 
-                    PlayerPrefs.DeleteKey(l.serializedProperty.GetArrayElementAtIndex(l.index).FindPropertyRelative("m_key").stringValue);
+                    PlayerPrefs.DeleteKey(prefKey);
                     PlayerPrefs.Save();
 
                     ReorderableList.defaultBehaviours.DoRemoveButton(l);
@@ -357,7 +358,7 @@ namespace BgTools.PlayerPrefsEditor
                 GUILayout.FlexibleSpace();
 
                 EditorGUIUtility.SetIconSize(new Vector2(14.0f, 14.0f));
-                GUIContent watcherContent = (entryAccessor.IsMonitoring()) ? new GUIContent(ImageManager.Watching, "Watch changes") : new GUIContent(ImageManager.NotWatching, "Not watching changes");
+                GUIContent watcherContent = (entryAccessor.IsMonitoring()) ? new GUIContent(ImageManager.Watching, "Watching changes") : new GUIContent(ImageManager.NotWatching, "Not watching changes");
                 if (GUILayout.Button(watcherContent, EditorStyles.toolbarButton))
                 {
                     monitoring = !monitoring;
