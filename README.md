@@ -47,7 +47,7 @@ The UPM need a specific structure what will be provided into the *upm* branch.
 
 Use following direct URL for the configuration:
 ```
-git@github.com:Dysman/bgTools-playerPrefsEditor.git#upm
+https://github.com/Dysman/bgTools-playerPrefsEditor.git#upm
 ```
 See official Unity documentation for more informations: [UI](https://docs.unity3d.com/Manual/upm-ui-giturl.html) or [manifest.json](https://docs.unity3d.com/Manual/upm-git.html)
 
