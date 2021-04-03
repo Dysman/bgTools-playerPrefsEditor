@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Planned]
 - Support new UIElements system
 
+## [Unreleased]
+- Improve key validation with more characters
+
 ## [1.0.4] - 2020-09-20
 - Add handling for special characters in product/company name
 - Improvement of plist read call on MAC
