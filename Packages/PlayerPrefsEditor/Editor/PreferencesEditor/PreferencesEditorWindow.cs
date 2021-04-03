@@ -52,7 +52,7 @@ namespace BgTools.PlayerPrefsEditor
 
         private readonly List<TextValidator> prefKeyValidatorList = new List<TextValidator>()
         {
-            new TextValidator(TextValidator.ErrorType.Error, @"Invalid character detected. Only letters, numbers, space and _!§$%&/()=?*+~#-]+$ are allowed", @"(^$)|(^[a-zA-Z0-9 _!§$%&/()=?*+~#-]+$)"),
+            new TextValidator(TextValidator.ErrorType.Error, @"Invalid character detected. Only letters, numbers, space and ,.;:<>_|!§$%&/()=?*+~#-]+$ are allowed", @"(^$)|(^[a-zA-Z0-9 ,.;:<>_|!§$%&/()=?*+~#-]+$)"),
             new TextValidator(TextValidator.ErrorType.Warning, @"The given key already exist. The existing entry would be overwritten!", (key) => { return !PlayerPrefs.HasKey(key); })
         };
 
@@ -497,7 +497,7 @@ namespace BgTools.PlayerPrefsEditor
         {
             string[] keys = entryAccessor.GetKeys(reloadKeys);
 
-            // keys.ToList().ForEach( e => { Debug.Log(e); } );
+            //keys.ToList().ForEach( e => { Debug.Log(e); } );
 
             // Seperate keys int unity defined and user defined
             Dictionary<bool, List<string>> groups = keys
