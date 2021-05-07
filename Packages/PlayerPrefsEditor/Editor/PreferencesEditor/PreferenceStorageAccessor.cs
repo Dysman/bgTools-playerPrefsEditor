@@ -217,7 +217,7 @@ namespace BgTools.PlayerPrefsEditor
                 process.StartInfo.Arguments = cmdStr;
                 process.Start();
 
-                process.WaitForExit();
+                process.WaitForExit(200);
                 string plist = process.StandardOutput.ReadToEnd();
 
                 MatchCollection matches = Regex.Matches(plist, @"(?: "")(.*)(?:"" =>.*)");
