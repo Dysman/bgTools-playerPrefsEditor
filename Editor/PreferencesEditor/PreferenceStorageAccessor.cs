@@ -4,6 +4,7 @@ using System.Linq;
 #if UNITY_EDITOR_WIN
 using Microsoft.Win32;
 #elif UNITY_EDITOR_OSX
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 #elif UNITY_EDITOR_LINUX
@@ -209,18 +210,26 @@ namespace BgTools.PlayerPrefsEditor
                 string fixedPrefsPath = prefPath.Replace("\"", "\\\"").Replace("'", "\\'").Replace("`", "\\`");
                 var cmdStr = string.Format(@"-p '{0}'", fixedPrefsPath);
 
+                string stdOut, errOut;
+
                 var process = new System.Diagnostics.Process();
                 process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardError = true;
                 process.StartInfo.FileName = "plutil";
                 process.StartInfo.Arguments = cmdStr;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardError = true;
+                process.OutputDataReceived += new DataReceivedEventHandler((sender, evt) => { stdOut += evt.Data; });
+                process.ErrorDataReceived += new DataReceivedEventHandler((sender, evt) => { errOut += evt.Data; });
+
                 process.Start();
 
-                process.WaitForExit(200);
-                string plist = process.StandardOutput.ReadToEnd();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
 
-                MatchCollection matches = Regex.Matches(plist, @"(?: "")(.*)(?:"" =>.*)");
+                process.WaitForExit(200);
+                //string plist = process.StandardOutput.ReadToEnd();
+
+                MatchCollection matches = Regex.Matches(stdOut, @"(?: "")(.*)(?:"" =>.*)");
                 cachedData = matches.Cast<Match>().Select((e) => e.Groups[1].Value).ToArray();
             }
         }
