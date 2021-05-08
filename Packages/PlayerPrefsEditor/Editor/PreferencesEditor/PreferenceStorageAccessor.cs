@@ -210,7 +210,8 @@ namespace BgTools.PlayerPrefsEditor
                 string fixedPrefsPath = prefPath.Replace("\"", "\\\"").Replace("'", "\\'").Replace("`", "\\`");
                 var cmdStr = string.Format(@"-p '{0}'", fixedPrefsPath);
 
-                string stdOut, errOut;
+                string stdOut = String.Empty;
+                string errOut = String.Empty;
 
                 var process = new System.Diagnostics.Process();
                 process.StartInfo.UseShellExecute = false;
@@ -218,8 +219,8 @@ namespace BgTools.PlayerPrefsEditor
                 process.StartInfo.Arguments = cmdStr;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
-                process.OutputDataReceived += new DataReceivedEventHandler((sender, evt) => { stdOut += evt.Data; });
-                process.ErrorDataReceived += new DataReceivedEventHandler((sender, evt) => { errOut += evt.Data; });
+                process.OutputDataReceived += new DataReceivedEventHandler((sender, evt) => { stdOut += evt.Data + "\n"; });
+                process.ErrorDataReceived += new DataReceivedEventHandler((sender, evt) => { errOut += evt.Data + "\n"; });
 
                 process.Start();
 
