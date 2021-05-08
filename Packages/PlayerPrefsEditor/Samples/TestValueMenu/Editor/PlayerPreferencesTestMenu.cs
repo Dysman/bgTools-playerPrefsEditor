@@ -11,7 +11,7 @@ namespace BgTools.PlayerPrefsEditor
         {
             PlayerPrefs.SetString("String", "boing");
             PlayerPrefs.SetString("String2", "foo");
-            PlayerPrefs.SetString(@"1234567890!$%&/()=?`qwertzuiop+asdfghjkl#<yxcvbnm,.-QWERTZUIOP*ASDFGHJKL'>YXCVBNM;:_|@", "AllCharsInKey");
+            PlayerPrefs.SetString(@"1234567890!$%&/()=?`qwertzuiop+asdfghjkl#<yxcvbnm,.-QWERTZUIOP*ASDFGHJKL'>YXCVBNM;:_|", "AllCharsInKey");
             PlayerPrefs.Save();
         }
 
