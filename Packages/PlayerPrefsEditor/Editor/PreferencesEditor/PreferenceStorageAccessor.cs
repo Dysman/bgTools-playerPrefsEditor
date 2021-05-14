@@ -228,7 +228,6 @@ namespace BgTools.PlayerPrefsEditor
                 process.BeginErrorReadLine();
 
                 process.WaitForExit(200);
-                //string plist = process.StandardOutput.ReadToEnd();
 
                 MatchCollection matches = Regex.Matches(stdOut, @"(?: "")(.*)(?:"" =>.*)");
                 cachedData = matches.Cast<Match>().Select((e) => e.Groups[1].Value).ToArray();
