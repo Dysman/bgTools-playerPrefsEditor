@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Improve key validation with more characters
+- Async output reading for MAC plist process
 
 ## [1.0.4] - 2020-09-20
 - Add handling for special characters in product/company name
