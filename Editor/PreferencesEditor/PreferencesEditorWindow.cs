@@ -289,27 +289,44 @@ namespace BgTools.PlayerPrefsEditor
                 var element = unityDefList.serializedProperty.GetArrayElementAtIndex(index);
                 SerializedProperty key = element.FindPropertyRelative("m_key");
                 SerializedProperty type = element.FindPropertyRelative("m_typeSelection");
-                SerializedProperty strValue = element.FindPropertyRelative("m_strValue");
-                SerializedProperty intValue = element.FindPropertyRelative("m_intValue");
-                SerializedProperty floatValue = element.FindPropertyRelative("m_floatValue");
-                float spliterPos = relSpliterPos * rect.width;
 
+                SerializedProperty value;
+
+                // Load only necessary type
+                switch ((PreferenceEntry.PrefTypes)type.enumValueIndex)
+                {
+                    case PreferenceEntry.PrefTypes.Float:
+                        value = element.FindPropertyRelative("m_floatValue");
+                        break;
+                    case PreferenceEntry.PrefTypes.Int:
+                        value = element.FindPropertyRelative("m_intValue");
+                        break;
+                    case PreferenceEntry.PrefTypes.String:
+                        value = element.FindPropertyRelative("m_strValue");
+                        break;
+                    default:
+                        value = element.FindPropertyRelative("This should never happen");
+                        break;
+                }
+
+                float spliterPos = relSpliterPos * rect.width;
                 rect.y += 2;
 
                 GUI.enabled = false;
-                EditorGUI.LabelField(new Rect(rect.x, rect.y, spliterPos - 1, EditorGUIUtility.singleLineHeight), new GUIContent(key.stringValue, key.stringValue));
-                EditorGUI.PropertyField(new Rect(rect.x + spliterPos + 1, rect.y, 60, EditorGUIUtility.singleLineHeight), type, GUIContent.none);
+                string prefKeyName = key.stringValue;
+                EditorGUI.LabelField(new Rect(rect.x, rect.y, spliterPos - 1, EditorGUIUtility.singleLineHeight), new GUIContent(prefKeyName, prefKeyName));
+                EditorGUI.EnumPopup(new Rect(rect.x + spliterPos + 1, rect.y, 60, EditorGUIUtility.singleLineHeight), (PreferenceEntry.PrefTypes)type.enumValueIndex);
 
                 switch ((PreferenceEntry.PrefTypes)type.enumValueIndex)
                 {
                     case PreferenceEntry.PrefTypes.Float:
-                        EditorGUI.DelayedFloatField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), floatValue, GUIContent.none);
+                        EditorGUI.DelayedFloatField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), value, GUIContent.none);
                         break;
                     case PreferenceEntry.PrefTypes.Int:
-                        EditorGUI.DelayedIntField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), intValue, GUIContent.none);
+                        EditorGUI.DelayedIntField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), value, GUIContent.none);
                         break;
                     case PreferenceEntry.PrefTypes.String:
-                        EditorGUI.DelayedTextField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), strValue, GUIContent.none);
+                        EditorGUI.DelayedTextField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), value, GUIContent.none);
                         break;
                 }
                 GUI.enabled = !showLoadingIndicatorOverlay;
