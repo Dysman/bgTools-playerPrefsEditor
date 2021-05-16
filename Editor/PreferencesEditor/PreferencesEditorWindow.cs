@@ -166,9 +166,25 @@ namespace BgTools.PlayerPrefsEditor
 
                 SerializedProperty key = element.FindPropertyRelative("m_key");
                 SerializedProperty type = element.FindPropertyRelative("m_typeSelection");
-                SerializedProperty strValue = element.FindPropertyRelative("m_strValue");
-                SerializedProperty intValue = element.FindPropertyRelative("m_intValue");
-                SerializedProperty floatValue = element.FindPropertyRelative("m_floatValue");
+
+                SerializedProperty value;
+
+                // Load only necessary type
+                switch ((PreferenceEntry.PrefTypes)type.enumValueIndex)
+                {
+                    case PreferenceEntry.PrefTypes.Float:
+                        value = element.FindPropertyRelative("m_floatValue");
+                        break;
+                    case PreferenceEntry.PrefTypes.Int:
+                        value = element.FindPropertyRelative("m_intValue");
+                        break;
+                    case PreferenceEntry.PrefTypes.String:
+                        value = element.FindPropertyRelative("m_strValue");
+                        break;
+                    default:
+                        value = element.FindPropertyRelative("This should never happen");
+                        break;
+                }
 
                 float spliterPos = relSpliterPos * rect.width;
                 rect.y += 2;
@@ -181,13 +197,13 @@ namespace BgTools.PlayerPrefsEditor
                 switch ((PreferenceEntry.PrefTypes)type.enumValueIndex)
                 {
                     case PreferenceEntry.PrefTypes.Float:
-                        EditorGUI.DelayedFloatField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), floatValue, GUIContent.none);
+                        EditorGUI.DelayedFloatField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), value, GUIContent.none);
                         break;
                     case PreferenceEntry.PrefTypes.Int:
-                        EditorGUI.DelayedIntField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), intValue, GUIContent.none);
+                        EditorGUI.DelayedIntField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), value, GUIContent.none);
                         break;
                     case PreferenceEntry.PrefTypes.String:
-                        EditorGUI.DelayedTextField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), strValue, GUIContent.none);
+                        EditorGUI.DelayedTextField(new Rect(rect.x + spliterPos + 62, rect.y, rect.width - spliterPos - 60, EditorGUIUtility.singleLineHeight), value, GUIContent.none);
                         break;
                 }
                 if (EditorGUI.EndChangeCheck())
@@ -197,13 +213,13 @@ namespace BgTools.PlayerPrefsEditor
                     switch ((PreferenceEntry.PrefTypes)type.enumValueIndex)
                     {
                         case PreferenceEntry.PrefTypes.Float:
-                            PlayerPrefs.SetFloat(key.stringValue, floatValue.floatValue);
+                            PlayerPrefs.SetFloat(key.stringValue, value.floatValue);
                             break;
                         case PreferenceEntry.PrefTypes.Int:
-                            PlayerPrefs.SetInt(key.stringValue, intValue.intValue);
+                            PlayerPrefs.SetInt(key.stringValue, value.intValue);
                             break;
                         case PreferenceEntry.PrefTypes.String:
-                            PlayerPrefs.SetString(key.stringValue, strValue.stringValue);
+                            PlayerPrefs.SetString(key.stringValue, value.stringValue);
                             break;
                     }
 
