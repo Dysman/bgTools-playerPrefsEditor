@@ -34,6 +34,8 @@ namespace BgTools.PlayerPrefsEditor
         private ReorderableList userDefList;
         private ReorderableList unityDefList;
 
+        private SerializedProperty[] userDefListCache = new SerializedProperty[0];
+
         private PreferenceEntryHolder prefEntryHolder;
 
         private Vector2 scrollPos;
@@ -160,14 +162,15 @@ namespace BgTools.PlayerPrefsEditor
             userDefList.drawElementBackgroundCallback = OnDrawElementBackgroundCallback;
             userDefList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
             {
-                var element = userDefList.serializedProperty.GetArrayElementAtIndex(index);
+                SerializedProperty element = GetUserDefListElementAtIndex(index, userDefList.serializedProperty);
+
                 SerializedProperty key = element.FindPropertyRelative("m_key");
                 SerializedProperty type = element.FindPropertyRelative("m_typeSelection");
                 SerializedProperty strValue = element.FindPropertyRelative("m_strValue");
                 SerializedProperty intValue = element.FindPropertyRelative("m_intValue");
                 SerializedProperty floatValue = element.FindPropertyRelative("m_floatValue");
-                float spliterPos = relSpliterPos * rect.width;
 
+                float spliterPos = relSpliterPos * rect.width;
                 rect.y += 2;
 
                 EditorGUI.BeginChangeCheck();
@@ -449,6 +452,9 @@ namespace BgTools.PlayerPrefsEditor
 
             CreatePrefEntries(userDef, prefEntryHolder.userDefList);
             CreatePrefEntries(unityDef, prefEntryHolder.unityDefList);
+
+            // Clear cache
+            userDefListCache = new SerializedProperty[prefEntryHolder.userDefList.Count];
         }
 
         private void CreatePrefEntries(string[] keySource, List<PreferenceEntry> listDest)
@@ -506,6 +512,17 @@ namespace BgTools.PlayerPrefsEditor
 
             unityDef = (groups.ContainsKey(true)) ? groups[true].ToArray() : new string[0];
             userDef = (groups.ContainsKey(false)) ? groups[false].ToArray() : new string[0];
+        }
+
+        private SerializedProperty GetUserDefListElementAtIndex(int index, SerializedProperty ListProperty)
+        {
+            UnityEngine.Assertions.Assert.IsTrue(ListProperty.isArray, "Given 'ListProperts' is not type of array");
+
+            if (userDefListCache[index] == null)
+            {
+                userDefListCache[index] = ListProperty.GetArrayElementAtIndex(index);
+            }
+            return userDefListCache[index];
         }
 
 #if (UNITY_EDITOR_LINUX || UNITY_EDITOR_OSX)
