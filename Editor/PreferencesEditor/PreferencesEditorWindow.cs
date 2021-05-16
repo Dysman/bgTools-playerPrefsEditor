@@ -190,9 +190,10 @@ namespace BgTools.PlayerPrefsEditor
                 rect.y += 2;
 
                 EditorGUI.BeginChangeCheck();
-                EditorGUI.LabelField(new Rect(rect.x, rect.y, spliterPos - 1, EditorGUIUtility.singleLineHeight), new GUIContent(key.stringValue, key.stringValue));
+                string prefKeyName = key.stringValue;
+                EditorGUI.LabelField(new Rect(rect.x, rect.y, spliterPos - 1, EditorGUIUtility.singleLineHeight), new GUIContent(prefKeyName, prefKeyName));
                 GUI.enabled = false;
-                EditorGUI.PropertyField(new Rect(rect.x + spliterPos + 1, rect.y, 60, EditorGUIUtility.singleLineHeight), type, GUIContent.none);
+                EditorGUI.EnumPopup(new Rect(rect.x + spliterPos + 1, rect.y, 60, EditorGUIUtility.singleLineHeight), (PreferenceEntry.PrefTypes)type.enumValueIndex);
                 GUI.enabled = !showLoadingIndicatorOverlay;
                 switch ((PreferenceEntry.PrefTypes)type.enumValueIndex)
                 {
