@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Planned]
 - Support new UIElements system
 
+## [Unreleased]
+- Add utf8 key encryption support for windows
+
 ## [1.1.0] - 2021-05-17
 - Improve key validation with more characters
 - Async output reading for MAC plist process
