@@ -45,6 +45,23 @@ namespace BgTools.PlayerPrefsEditor
             PlayerPrefs.Save();
         }
 
+        [MenuItem("Tools/BG Tools/PlayerPrefs Test Values/AddEntry Fonts", false, 22)]
+        public static void addTestValueFonts()
+        {
+            PlayerPrefs.SetString("Arabic (حروف عربية)", "حروف عربية");
+            PlayerPrefs.SetString("Cyrillic (Кириллические символы )", "Кириллические символы ");
+            PlayerPrefs.SetString("Devanagari (देवनागरी चिन्ह)", "देवनागरी चिन्ह");
+            PlayerPrefs.SetString("Greek (ελληνικοί χαρακτήρες)", "ελληνικοί χαρακτήρες");
+            PlayerPrefs.SetString("Hangul (한글 기호)", "한글 기호");
+            PlayerPrefs.SetString("Hànzì (漢字)", "漢字");
+            PlayerPrefs.SetString("Hebrew (תווים בעברית)", "תווים בעברית");
+            PlayerPrefs.SetString("Hiragana (ひらがな記号)", "ひらがな記号");
+            PlayerPrefs.SetString("Katakana (カタカナサイン)", "カタカナサイン");
+            PlayerPrefs.SetString("Latin (ingenia Latina)", "ingenia Latina");
+
+            PlayerPrefs.Save();
+        }
+
         [MenuItem("Tools/BG Tools/PlayerPrefs Test Values/DeleteAll", false, 50)]
         public static void deleteAll()
         {
