@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 
 #if UNITY_EDITOR_WIN
 using Microsoft.Win32;
@@ -32,6 +33,7 @@ namespace BgTools.PlayerPrefsEditor
             if (reloadData || cachedData.Length == 0)
             {
                 FetchKeysFromSystem();
+                EncodeAnsiInPlace();
             }
 
             return cachedData;
@@ -62,6 +64,17 @@ namespace BgTools.PlayerPrefsEditor
         public abstract void StartMonitoring();
         public abstract void StopMonitoring();
         public abstract bool IsMonitoring();
+
+        public void EncodeAnsiInPlace()
+        {
+            Encoding utf8 = Encoding.UTF8;
+            Encoding ansi = Encoding.GetEncoding(1252);
+
+            for (int i = 0; i < cachedData.Length; i++)
+            {
+                cachedData[i] = utf8.GetString(ansi.GetBytes(cachedData[i]));
+            }
+        }
     }
 
 #if UNITY_EDITOR_WIN
