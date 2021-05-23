@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
 
 #if UNITY_EDITOR_WIN
 using Microsoft.Win32;
+using System.Text;
 #elif UNITY_EDITOR_OSX
 using System.Diagnostics;
 using System.IO;
@@ -33,7 +33,6 @@ namespace BgTools.PlayerPrefsEditor
             if (reloadData || cachedData.Length == 0)
             {
                 FetchKeysFromSystem();
-                EncodeAnsiInPlace();
             }
 
             return cachedData;
@@ -64,17 +63,6 @@ namespace BgTools.PlayerPrefsEditor
         public abstract void StartMonitoring();
         public abstract void StopMonitoring();
         public abstract bool IsMonitoring();
-
-        public void EncodeAnsiInPlace()
-        {
-            Encoding utf8 = Encoding.UTF8;
-            Encoding ansi = Encoding.GetEncoding(1252);
-
-            for (int i = 0; i < cachedData.Length; i++)
-            {
-                cachedData[i] = utf8.GetString(ansi.GetBytes(cachedData[i]));
-            }
-        }
     }
 
 #if UNITY_EDITOR_WIN
@@ -109,6 +97,8 @@ namespace BgTools.PlayerPrefsEditor
 
             // Clean <key>_h3320113488 nameing
             cachedData = cachedData.Select((key) => { return key.Substring(0, key.IndexOf("_h")); }).ToArray();
+
+            EncodeAnsiInPlace();
         }
 
         public override void StartMonitoring()
@@ -126,6 +116,16 @@ namespace BgTools.PlayerPrefsEditor
             return monitor.IsMonitoring;
         }
 
+        private void EncodeAnsiInPlace()
+        {
+            Encoding utf8 = Encoding.UTF8;
+            Encoding ansi = Encoding.GetEncoding(1252);
+
+            for (int i = 0; i < cachedData.Length; i++)
+            {
+                cachedData[i] = utf8.GetString(ansi.GetBytes(cachedData[i]));
+            }
+        }
     }
 
 #elif UNITY_EDITOR_LINUX
