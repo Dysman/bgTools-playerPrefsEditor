@@ -7,9 +7,16 @@ namespace BgTools.Utils
     public class ImageManager
     {
         private static string GetAssetDir() {
-
-            string pathOfFile = AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets("ImageManager")[0]);
-            return pathOfFile.Substring(0, pathOfFile.IndexOf("ImageManager.cs"));
+            foreach (string assetGuid in AssetDatabase.FindAssets("ImageManager"))
+            {
+                string filePath = AssetDatabase.GUIDToAssetPath(assetGuid);
+                int fileNameStartIdx = filePath.IndexOf("ImageManager.cs", StringComparison.Ordinal);
+                if (fileNameStartIdx >= 0)
+                {
+                    return filePath.Substring(0, fileNameStartIdx);
+                }
+            }
+            throw new Exception("Cannot find ImageManager.cs in the project. Are sure all the files in place?");
         }
 
         public static Texture2D GetOsIcon()
