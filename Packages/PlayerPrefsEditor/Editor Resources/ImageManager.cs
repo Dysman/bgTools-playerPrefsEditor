@@ -10,7 +10,7 @@ namespace BgTools.Utils
     public class ImageManager
     {
         // Keep this ID unique
-        private static readonly string ID = "[PlayerPrefsEditor] BgTools.Utils.ImageManager";
+        private static readonly string ID = "[PlayerPrefsEditor] com.bgtools.playerprefseditor";
 
         private static string imageManagerPath;
         private static string GetAssetDir()
