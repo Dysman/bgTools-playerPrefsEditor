@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 using System;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,11 +16,12 @@ namespace BgTools.Utils
 
             foreach (string assetGuid in AssetDatabase.FindAssets("ImageManager"))
             {
-                string filePath = AssetDatabase.GUIDToAssetPath(assetGuid);
-                int fileNameStartIdx = filePath.IndexOf("ImageManager.cs", StringComparison.Ordinal);
-                if (fileNameStartIdx >= 0)
+                string assetPath = AssetDatabase.GUIDToAssetPath(assetGuid);
+                string fileName = Path.GetFileName(assetPath);
+
+                if (fileName.Equals("ImageManager.cs"))
                 {
-                    imageManagerPath = filePath.Substring(0, fileNameStartIdx);
+                    imageManagerPath = Path.GetDirectoryName(assetPath) + Path.DirectorySeparatorChar;
                     return imageManagerPath;
                 }
             }
