@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using System;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,11 +9,16 @@ namespace BgTools.Utils
 {
     public class ImageManager
     {
-        private static string imageManagerPath;
-        private static string GetAssetDir() {
+        // Keep this ID unique
+        private static readonly string ID = "[PlayerPrefsEditor] BgTools.Utils.ImageManager";
 
+        private static string imageManagerPath;
+        private static string GetAssetDir()
+        {
             if (imageManagerPath != null)
+            {
                 return imageManagerPath;
+            }
 
             foreach (string assetGuid in AssetDatabase.FindAssets("ImageManager"))
             {
@@ -21,8 +27,12 @@ namespace BgTools.Utils
 
                 if (fileName.Equals("ImageManager.cs"))
                 {
-                    imageManagerPath = Path.GetDirectoryName(assetPath) + Path.DirectorySeparatorChar;
-                    return imageManagerPath;
+                    // Check ID if it's the correct ImageManager
+                    if (File.ReadLines(Path.GetFullPath(assetPath)).Any(line => line.Contains(ID)))
+                    {
+                        imageManagerPath = Path.GetDirectoryName(assetPath) + Path.DirectorySeparatorChar;
+                        return imageManagerPath;
+                    }
                 }
             }
             throw new Exception("Cannot find ImageManager.cs in the project. Are sure all the files in place?");
