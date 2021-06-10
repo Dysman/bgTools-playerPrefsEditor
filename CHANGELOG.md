@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Planned]
 - Support new UIElements system
 
+## [Unreleased]
+- Fixed ImageManger icon detection
+
 ## [1.1.1] - 2021-05-23
 - Add utf8 key encryption support for windows
 
