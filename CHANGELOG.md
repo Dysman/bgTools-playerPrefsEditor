@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Planned]
 - Support new UIElements system
 
-## [Unreleased]
+## [1.1.2] - 2021-07-01
 - Fixed ImageManger icon detection
 
 ## [1.1.1] - 2021-05-23
