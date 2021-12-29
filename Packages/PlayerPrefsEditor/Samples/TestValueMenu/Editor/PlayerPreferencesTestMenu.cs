@@ -49,7 +49,7 @@ namespace BgTools.PlayerPrefsEditor
         public static void addTestValueFonts()
         {
             PlayerPrefs.SetString("Arabic (حروف عربية)", "حروف عربية");
-            PlayerPrefs.SetString("Cyrillic (Кириллические символы )", "Кириллические символы");
+            PlayerPrefs.SetString("Cyrillic (Кириллические символы)", "Кириллические символы");
             PlayerPrefs.SetString("Devanagari (देवनागरी चिन्ह)", "देवनागरी चिन्ह");
             PlayerPrefs.SetString("Greek (ελληνικοί χαρακτήρες)", "ελληνικοί χαρακτήρες");
             PlayerPrefs.SetString("Hangul (한글 기호)", "한글 기호");
