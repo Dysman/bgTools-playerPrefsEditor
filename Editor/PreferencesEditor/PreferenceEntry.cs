@@ -17,5 +17,20 @@
         public string m_strValue;
         public int m_intValue;
         public float m_floatValue;
+
+        public string ValueAsString()
+        {
+            switch(m_typeSelection)
+            {
+                case PrefTypes.String:
+                    return m_strValue;
+                case PrefTypes.Int:
+                    return m_intValue.ToString();
+                case PrefTypes.Float:
+                    return m_floatValue.ToString();
+                default:
+                    return string.Empty;
+            }
+        }
     }
 }
