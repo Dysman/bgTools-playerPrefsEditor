@@ -180,6 +180,45 @@ namespace BgTools.Utils
                 return notWatching;
             }
         }
+
+        private static Texture2D sortDisabled;
+        public static Texture2D SortDisabled
+        {
+            get
+            {
+                if (sortDisabled == null)
+                {
+                    sortDisabled = (Texture2D)AssetDatabase.LoadAssetAtPath(GetAssetDir() + "sort.png", typeof(Texture2D));
+                }
+                return sortDisabled;
+            }
+        }
+
+        private static Texture2D sortAsscending;
+        public static Texture2D SortAsscending
+        {
+            get
+            {
+                if (sortAsscending == null)
+                {
+                    sortAsscending = (Texture2D)AssetDatabase.LoadAssetAtPath(GetAssetDir() + "sort_asc.png", typeof(Texture2D));
+                }
+                return sortAsscending;
+            }
+        }
+
+        private static Texture2D sortDescending;
+        public static Texture2D SortDescending
+        {
+            get
+            {
+                if (sortDescending == null)
+                {
+                    sortDescending = (Texture2D)AssetDatabase.LoadAssetAtPath(GetAssetDir() + "sort_desc.png", typeof(Texture2D));
+                }
+                return sortDescending;
+            }
+        }
     }
 }
 #endif
