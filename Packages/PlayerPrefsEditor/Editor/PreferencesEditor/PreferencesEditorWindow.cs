@@ -21,7 +21,14 @@ namespace BgTools.PlayerPrefsEditor
 #region ErrorValues
         private readonly int ERROR_VALUE_INT = int.MinValue;
         private readonly string ERROR_VALUE_STR = "<bgTool_error_24072017>";
-#endregion //ErrorValues
+        #endregion //ErrorValues
+
+        private enum PreferencesEntrySortOrder
+        {
+            None = 0,
+            Asscending = 1,
+            Descending = 2
+        }
 
         private static string pathToPrefs = String.Empty;
         private static string platformPathPrefix = @"~";
@@ -29,6 +36,8 @@ namespace BgTools.PlayerPrefsEditor
         private string[] userDef;
         private string[] unityDef;
         private bool showSystemGroup = false;
+
+        private PreferencesEntrySortOrder sortOrder = PreferencesEntrySortOrder.None;
 
         private SerializedObject serializedObject;
         private ReorderableList userDefList;
@@ -96,6 +105,7 @@ namespace BgTools.PlayerPrefsEditor
             if(monitoring)
                 entryAccessor.StartMonitoring();
 
+            sortOrder = (PreferencesEntrySortOrder) EditorPrefs.GetInt("BGTools.PlayerPrefsEditor.SortOrder", 0);
             searchfield = new MySearchField();
             searchfield.DropdownSelectionDelegate = () => { PrepareData(); };
 
@@ -396,6 +406,34 @@ namespace BgTools.PlayerPrefsEditor
                 GUILayout.FlexibleSpace();
 
                 EditorGUIUtility.SetIconSize(new Vector2(14.0f, 14.0f));
+
+                GUIContent sortOrderContent;
+                switch (sortOrder)
+                {
+                    case PreferencesEntrySortOrder.Asscending:
+                        sortOrderContent = new GUIContent(ImageManager.SortAsscending, "Ascending sorted");
+                        break;
+                    case PreferencesEntrySortOrder.Descending:
+                        sortOrderContent = new GUIContent(ImageManager.SortDescending, "Descending sorted");
+                        break;
+                    case PreferencesEntrySortOrder.None:
+                    default:
+                        sortOrderContent = new GUIContent(ImageManager.SortDisabled, "Not sorted");
+                        break;
+                }
+
+                if (GUILayout.Button(sortOrderContent, EditorStyles.toolbarButton))
+                {
+                    
+                    sortOrder++;
+                    if((int) sortOrder >= Enum.GetValues(typeof(PreferencesEntrySortOrder)).Length)
+                    {
+                        sortOrder = 0;
+                    }
+                    EditorPrefs.SetInt("BGTools.PlayerPrefsEditor.SortOrder", (int) sortOrder);
+                    PrepareData(false);
+                }
+
                 GUIContent watcherContent = (entryAccessor.IsMonitoring()) ? new GUIContent(ImageManager.Watching, "Watching changes") : new GUIContent(ImageManager.NotWatching, "Not watching changes");
                 if (GUILayout.Button(watcherContent, EditorStyles.toolbarButton))
                 {
@@ -538,6 +576,15 @@ namespace BgTools.PlayerPrefsEditor
                 listDest = listDest.Where((preferenceEntry) => preferenceEntry.ValueAsString().ToLower().Contains(searchTxt.ToLower())).ToList<PreferenceEntry>();
             }
 
+            switch(sortOrder)
+            {
+                case PreferencesEntrySortOrder.Asscending:
+                    listDest.Sort((PreferenceEntry x, PreferenceEntry y) => { return x.m_key.CompareTo(y.m_key); });
+                    break;
+                case PreferencesEntrySortOrder.Descending:
+                    listDest.Sort((PreferenceEntry x, PreferenceEntry y) => { return y.m_key.CompareTo(x.m_key); });
+                    break;
+            }
         }
 
         private void LoadKeys(out string[] userDef, out string[] unityDef, bool reloadKeys)
