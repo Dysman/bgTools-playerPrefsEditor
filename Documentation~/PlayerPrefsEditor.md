@@ -24,13 +24,14 @@ The PlayerPrefs Editor is located in the top menu at Tools/BG Tools/PlayerPrefs 
 
 The PlayerPrefs Editor window displays:
 * (A) Filter field
-* (B) Toggle 'System changes monitoring' behavior
-* (C) Refresh data
-* (D) Delete all data
-* (E) Operating system and path to PlayerPrefs data
-* (F) PlayerPrefs data list (Key, Type, Value)
-* (G) Add/Remove a PlayerPrefs entry
-* (H) Toggle visibility of system defined PlayerPrefs
+* (B) Sort mode
+* (C) Toggle 'System changes monitoring' behavior
+* (D) Refresh data
+* (E) Delete all data
+* (F) Operating system and path to PlayerPrefs data
+* (G) PlayerPrefs data list (Key, Type, Value)
+* (H) Add/Remove a PlayerPrefs entry
+* (I) Toggle visibility of system defined PlayerPrefs
 
 ### Modify Entries
 
@@ -48,9 +49,28 @@ Select the entry from the list that you want to delete. Press the '-' button to 
 
 To change a value of a existing entry do this directly in the value field in the PlayerPref list.
 
+### Sort & Filter
+
+**Sorting**
+
+Circle trought the sorting funtions by pressing the (B) button in the toolbar.
+
+Following sorting function are aviliable for the PlayerPref entries:
+* None
+* Ascending
+* Descending
+
+**Filtering**
+
+Enter a text into the the search field (A) in the toolbar to filter the PlayerPrefs data list (G).
+
+![PlayerPrefs editor searchfield modes](./Images/bgtools_ppe_manual_filterModes.png){ width=50% style="max-width:350px" }
+
+Additionally select the mode for filtering by pressing on the magnifying glass icon in the search field. Choose between filtering the existing PlayPrefs by key or value. The current search target will be shown in the searchfield if no search string is present.
+
 ### Monitoring system changes
 
-The plugin can monitor changes at runtime automatically and keep the view up-to-date. This detection is active by default, but it can be turned off over the (B) button in the toolbar.
+The plugin can monitor changes at runtime automatically and keep the view up-to-date. This detection is active by default, but it can be turned off over the (C) button in the toolbar.
 
 ## Samples
 
