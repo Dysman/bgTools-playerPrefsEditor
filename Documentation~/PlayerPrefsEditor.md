@@ -67,7 +67,7 @@ This package includes two samples for testing purposes:
 
 This version of PlayerPrefs Editor is compatible with the following versions of the Unity Editor:
 
-> 2017.4 and later (recommended)  
+> 2019.4 and later (recommended)  
 > Windows, MacOS, Linux
 
 ### Limitations MacOS
