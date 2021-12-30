@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Enhanced search field to filter by Pref key or value
+- Add sorting functionality for Pref entries (none, asscending, descending)
 
 ### Removed
 - Remove Unity 2017 support
