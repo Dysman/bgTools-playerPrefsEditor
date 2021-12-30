@@ -25,7 +25,7 @@ Tool extension for the Unity Editor that enables easy access to the player prefe
 
 ## Requirements
 
-Unity Version: 2017.4.3 (LTS) or higher  
+Unity Version: 2019.4 (LTS) or higher
 Editor Version: Windows, MacOS, Linux
 
 ## Installation
