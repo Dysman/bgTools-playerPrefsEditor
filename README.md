@@ -1,6 +1,6 @@
 # PlayerPrefs Editor for Unity 3D
 
-[![Minimal unity editor version](https://img.shields.io/badge/UnityEditor-2017.4%20or%20later-blue.svg)](https://unity3d.com/de/get-unity/download/archive)
+[![Minimal unity editor version](https://img.shields.io/badge/UnityEditor-2019.4%20or%20later-blue.svg)](https://unity3d.com/de/get-unity/download/archive)
 [![CI](https://github.com/Dysman/bgTools-playerPrefsEditor/workflows/CI/badge.svg)](https://github.com/Dysman/bgTools-playerPrefsEditor/actions)&nbsp;&nbsp;
 [![Release](https://img.shields.io/github/v/release/Dysman/bgTools-playerPrefsEditor?include_prereleases&label=Release)](https://github.com/Dysman/bgTools-playerPrefsEditor/releases)
 [![GitHub package.json version (branch)](https://img.shields.io/github/package-json/v/dysman/bgTools-playerPrefsEditor/upm?label=GitURL-UPM)](https://github.com/Dysman/bgTools-playerPrefsEditor/tree/upm)
@@ -11,7 +11,7 @@
 
 Tool extension for the Unity Editor that enables easy access to the player preferences over a simple UI. Allows to view, add, remove and modify entries on the development machine.
 
-![Preference editor window](https://www.bgranzow.de/downloads/PlayerPrefsEditorV1_0_1.png)
+![Preference editor window](https://www.bgranzow.de/downloads/PlayerPrefsEditorV1_2_0.png)
 
 ## Features
 
