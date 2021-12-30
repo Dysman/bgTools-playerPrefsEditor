@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Planned]
 - Support new UIElements system
 
+## [Unreleased]
+### Added
+- Enhanced search field to filter by Pref key or value
+
+### Removed
+- Remove Unity 2017 support
+
 ## [1.1.2] - 2021-07-01
 - Fixed ImageManger icon detection
 
