@@ -6,10 +6,10 @@
 [![GitHub package.json version (branch)](https://img.shields.io/github/package-json/v/dysman/bgTools-playerPrefsEditor/upm?label=GitURL-UPM)](https://github.com/Dysman/bgTools-playerPrefsEditor/tree/upm)
 [![openupm](https://img.shields.io/npm/v/com.bgtools.playerprefseditor?label=OpenUPM&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.bgtools.playerprefseditor)
 [![AssetStore](https://img.shields.io/badge/dynamic/xml?url=http://u3d.as/1RLa&label=UnityAssetStore&query=//*[contains(@class,%20%27product-version%27)]/div[2]&prefix=v)](http://u3d.as/1RLa)
-[<img align="right" src="https://img.shields.io/discord/431522155814191116?logo=Discord&logoColor=white&style=flat&label=Discord&labelColor=5865F2">](https://discord.gg/8rcPZrD)
 
 [![Flattr this git repo](https://img.shields.io/badge/_-Flattr-green?logo=flattr&style=flat)](https://flattr.com/@dysman)&nbsp;
 [![Buy me a coffee](https://img.shields.io/badge/-Buy%20Me%20A%20Coffee-yellow?logo=BuyMeACoffee&style=flat&logoColor=white)](https://www.buymeacoffee.com/dysman)
+[<img align="right" src="https://img.shields.io/discord/431522155814191116?logo=Discord&logoColor=white&style=flat&label=Discord&labelColor=5865F2">](https://discord.gg/8rcPZrD)
 
 Tool extension for the Unity Editor that enables easy access to the player preferences over a simple UI. Allows to view, add, remove and modify entries on the development machine.
 
