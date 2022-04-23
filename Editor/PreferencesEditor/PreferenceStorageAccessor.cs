@@ -96,7 +96,7 @@ namespace BgTools.PlayerPrefsEditor
             }
 
             // Clean <key>_h3320113488 nameing
-            cachedData = cachedData.Select((key) => { return key.Substring(0, key.IndexOf("_h")); }).ToArray();
+            cachedData = cachedData.Select((key) => { return key.Substring(0, key.LastIndexOf("_h", StringComparison.Ordinal)); }).ToArray();
 
             EncodeAnsiInPlace();
         }
