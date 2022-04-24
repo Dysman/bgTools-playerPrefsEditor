@@ -19,7 +19,7 @@ namespace BgTools.PlayerPrefsEditor
     {
         #region P/Invoke
 
-        [DllImport("advapi32.dll", SetLastError = true)]
+        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         private static extern int RegOpenKeyEx(IntPtr hKey, string subKey, uint options, int samDesired, out IntPtr phkResult);
 
         [DllImport("advapi32.dll", SetLastError = true)]
