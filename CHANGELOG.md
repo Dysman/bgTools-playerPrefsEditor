@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Fix detection for PlayerPrefs where the key contains '_h'
+- Use unicode for windows registry lookups to support none Ascii chars in projects names
 
 ## [1.2.0] - 2022-01-01
 ### Added
