@@ -691,7 +691,7 @@ public class MySearchField : SearchField
             GUI.Label(new Rect(rect.x + 14, rect.y, 40, rect.height), Enum.GetName(typeof(SearchModePreferencesEditorWindow), SearchMode));
             GUI.enabled = true;
         }
-
+        ContexMenuOverlayStyle.contentOffset = new Vector2();
         return result;
     }
 
