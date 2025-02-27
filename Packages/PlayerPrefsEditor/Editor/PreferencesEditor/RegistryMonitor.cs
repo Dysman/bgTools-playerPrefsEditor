@@ -184,11 +184,11 @@ namespace BgTools.PlayerPrefsEditor
                 case RegistryHive.CurrentUser:
                     _registryHive = HKEY_CURRENT_USER;
                     break;
-
+#if !NETSTANDARD
                 case RegistryHive.DynData:
                     _registryHive = HKEY_DYN_DATA;
                     break;
-
+#endif
                 case RegistryHive.LocalMachine:
                     _registryHive = HKEY_LOCAL_MACHINE;
                     break;
