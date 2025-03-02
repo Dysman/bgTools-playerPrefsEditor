@@ -12,7 +12,7 @@
 
 Tool extension for the Unity Editor that enables easy access to the player preferences over a simple UI. Allows to view, add, remove and modify entries on the development machine.
 
-![Preference editor window](https://www.bgranzow.de/downloads/PlayerPrefsEditorV1_2_0.png)
+![Preference editor window](https://www.bgtools.de/img/bgtools_ppe_title.png)
 
 ## Features
 
