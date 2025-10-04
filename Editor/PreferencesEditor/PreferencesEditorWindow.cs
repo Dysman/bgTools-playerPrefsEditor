@@ -597,7 +597,7 @@ namespace CCG.PlayerPrefsEditor
 
             // Seperate keys int unity defined and user defined
             Dictionary<bool, List<string>> groups = keys
-                .GroupBy( (key) => key.StartsWith("unity.") || key.StartsWith("UnityGraphicsQuality") )
+                .GroupBy( (key) => key.StartsWith("unity.") || key.StartsWith("unity_") || key.StartsWith("UnityGraphicsQuality") || key.StartsWith("AddressablesRuntimeDataPath"))
                 .ToDictionary( (g) => g.Key, (g) => g.ToList() );
 
             unityDef = (groups.ContainsKey(true)) ? groups[true].ToArray() : new string[0];
@@ -700,3 +700,4 @@ public class MySearchField : SearchField
     public new string OnToolbarGUI(string text, params GUILayoutOption[] options) => this.OnToolbarGUI(GUILayoutUtility.GetRect(29f, 200f, 18f, 18f, EditorStyles.toolbarSearchField, options), text);
     public new string OnToolbarGUI(Rect rect, string text) => this.OnGUI(rect, text, EditorStyles.toolbarSearchField, EditorStyles.toolbarButton, EditorStyles.toolbarButton);
 }
+
