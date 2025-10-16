@@ -597,7 +597,9 @@ namespace CCG.PlayerPrefsEditor
 
             // Seperate keys int unity defined and user defined
             Dictionary<bool, List<string>> groups = keys
-                .GroupBy( (key) => key.StartsWith("unity.") || key.StartsWith("unity_") || key.StartsWith("UnityGraphicsQuality") || key.StartsWith("AddressablesRuntimeDataPath"))
+                .GroupBy( (key) => key.StartsWith("unity.") || key.StartsWith("unity_") ||
+                                   key.StartsWith("AddressablesRuntimeDataPath") || key.StartsWith("AddressablesRuntimeBuildLog") ||
+                                   key.StartsWith("UnityGraphicsQuality") )
                 .ToDictionary( (g) => g.Key, (g) => g.ToList() );
 
             unityDef = (groups.ContainsKey(true)) ? groups[true].ToArray() : new string[0];
